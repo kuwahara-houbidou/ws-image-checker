@@ -1,0 +1,30 @@
+{
+  "name": "宝美堂_WS画像チェックツール",
+  "short_name": "WS画像チェック",
+  "description": "管理番号から商品画像を表示・チェックするツール",
+  "start_url": "./tanakotsu_viewer.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#35B79D",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

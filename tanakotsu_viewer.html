@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>宝美堂_WS画像チェックツール_v1.10</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <meta name="theme-color" content="#35B79D">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="WS画像チェック">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 12px;
+      padding-bottom: 36px;
+      min-height: 100vh;
+    }
+
+    /* ── パスワード画面 ── */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: #f0f2f5;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .auth-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 36px 24px 28px;
+      width: 100%;
+      max-width: 320px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+    .auth-logo { font-size: 44px; margin-bottom: 10px; }
+    .auth-title { font-size: 16px; font-weight: 700; color: #222; margin-bottom: 4px; }
+    .auth-sub { font-size: 12px; color: #aaa; margin-bottom: 28px; }
+    .auth-input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 18px;
+      outline: none;
+      margin-bottom: 12px;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+    .auth-input::placeholder { letter-spacing: normal; }
+    .auth-input:focus { border-color: #35B79D; }
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: #35B79D;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-login:active { background: #2a9a84; }
+    .auth-error { font-size: 13px; color: #e53935; margin-top: 12px; min-height: 18px; }
+
+    /* ── タブバー（画面最上部に固定） ── */
+    .tabbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+      margin: -12px -12px 14px -12px;
+    }
+    .tab {
+      flex: 1;
+      padding: 14px 0;
+      border: none;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      color: #bbb;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab.active {
+      background: #f0f2f5;
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+
+    /* ── タブペイン ── */
+    .tabpane { display: none; }
+    .tabpane.active { display: block; }
+
+    /* ── 入力パネル（アコーディオン） ── */
+    .panel {
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .panel-header:active { background: #f5f5f5; }
+
+    h1 { font-size: 17px; font-weight: 700; color: #222; }
+
+    .toggle-icon {
+      font-size: 13px;
+      color: #888;
+      transition: transform 0.25s;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+    .panel.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+    .panel-body {
+      padding: 0 16px 16px;
+      overflow: hidden;
+      max-height: 500px;
+      opacity: 1;
+      transition: max-height 0.3s ease, opacity 0.25s ease, padding-bottom 0.3s ease;
+    }
+    .panel.collapsed .panel-body {
+      max-height: 0;
+      opacity: 0;
+      padding-bottom: 0;
+    }
+
+    textarea {
+      width: 100%;
+      height: 200px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 14px;
+      font-family: monospace;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+    }
+    textarea:focus { border-color: #43a047; }
+
+    .hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 6px;
+      line-height: 1.7;
+    }
+
+    button {
+      padding: 12px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-show {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      background: #35B79D;
+      color: #fff;
+    }
+    .btn-show:active { background: #2a9a84; }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 8px; }
+    .btn-sub { flex: 1; background: #e8eaed; color: #555; }
+    .btn-sub:active { background: #dadce0; }
+
+    /* ── 統計バー + 保存ボタン ── */
+    .statsbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      min-height: 28px;
+    }
+    .stats { font-size: 14px; color: #555; }
+
+    .btn-save {
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none;
+    }
+    .btn-save:active { background: #1557b0; }
+
+    /* ── カードグリッド ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* ── カード ── */
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: opacity .2s, background .2s;
+    }
+    .card.checked { background: #f5f5f5; opacity: 0.5; }
+
+    .card-img-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 100%;
+      background: #f3f3f3;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .card-img-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .card-num {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: rgba(0,0,0,0.58);
+      color: #fff;
+      font-size: 10px;
+      font-family: monospace;
+      padding: 2px 6px;
+      border-radius: 3px;
+      max-width: 92%;
+      word-break: break-all;
+      line-height: 1.4;
+    }
+    .noimage-badge {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #bbb;
+      background: #f3f3f3;
+    }
+    .card-check {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      padding: 2px 0;
+    }
+    .card-check input[type=checkbox] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .card-check span { font-size: 13px; color: #333; }
+    .card.checked .card-check span { text-decoration: line-through; color: #aaa; }
+
+    /* ── 履歴タブ ── */
+    .sessions-hint {
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      padding: 10px 0 4px;
+    }
+    .sessions-count {
+      font-size: 12px;
+      color: #bbb;
+      text-align: center;
+      padding: 0 0 14px;
+    }
+    .sessions-empty {
+      text-align: center;
+      padding: 40px 16px;
+      font-size: 14px;
+      color: #bbb;
+    }
+
+    .session-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 18px 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .session-info { flex: 1; min-width: 0; }
+    .session-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .session-meta { font-size: 13px; color: #888; }
+
+    .session-btns { display: flex; gap: 10px; flex-shrink: 0; }
+
+    .btn-restore-sm {
+      padding: 8px 19px;
+      font-size: 16px;
+      font-weight: 600;
+      background: transparent;
+      color: #35B79D;
+      border: 2px solid #35B79D;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+    .btn-restore-sm:active { background: #e0f5f2; }
+
+    .btn-delete-sm {
+      padding: 8px 19px;
+      font-size: 16px;
+      font-weight: 600;
+      background: transparent;
+      color: #e53935;
+      border: 2px solid #e53935;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+    .btn-delete-sm:active { background: #ffebee; }
+
+    /* ── コンテキストメニュー（長押し・右クリック） ── */
+    .ctx-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+    }
+    .ctx-menu {
+      display: none;
+      position: fixed;
+      z-index: 101;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      overflow: hidden;
+      min-width: 160px;
+    }
+    .ctx-item {
+      display: block;
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: left;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .ctx-item:last-child { border-bottom: none; }
+    .ctx-item:active { background: #f5f5f5; }
+    .ctx-item.danger { color: #c62828; }
+  </style>
+</head>
+<body>
+
+<!-- パスワード画面 -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-logo">🔍</div>
+    <div class="auth-title">WS画像チェックツール</div>
+    <div class="auth-sub">宝美堂 社内専用</div>
+    <input class="auth-input" type="password" id="auth-input" placeholder="パスワード" maxlength="20">
+    <button class="btn-login" onclick="checkPassword()">ログイン</button>
+    <div class="auth-error" id="auth-error"></div>
+  </div>
+</div>
+
+<!-- タブバー -->
+<div class="tabbar">
+  <button class="tab active" id="tab-search" onclick="switchTab('search')">🔍 画像検索</button>
+  <button class="tab" id="tab-sessions" onclick="switchTab('sessions')">📁 履歴（セッション）</button>
+</div>
+
+<!-- ══ 検索タブ ══ -->
+<div class="tabpane active" id="pane-search">
+
+  <div class="panel" id="input-panel">
+    <div class="panel-header" onclick="togglePanel()">
+      <h1>宝美堂_WS画像チェックツール_v1.10</h1>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="panel-body">
+      <textarea id="codes-input" placeholder="ここに12桁の管理番号を入力"></textarea>
+      <div class="hint">※改行・カンマ・スペース区切り対応<br>※画像はWSから取得しています</div>
+      <button class="btn-show" onclick="showItems()">表示</button>
+      <div class="btn-row">
+        <button class="btn-sub" onclick="clearInput()">クリア</button>
+        <button class="btn-sub" onclick="clearChecks()">チェックリセット</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="statsbar">
+    <div class="stats" id="stats"></div>
+    <button class="btn-save" id="btn-save" onclick="saveSession()">💾 このセッションを保存</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- ══ 履歴タブ ══ -->
+<div class="tabpane" id="pane-sessions">
+  <div class="sessions-hint">長押し（PCは右クリック）でも操作できます</div>
+  <div class="sessions-count" id="sessions-count"></div>
+  <div id="sessions-empty" class="sessions-empty">保存済みの履歴はありません</div>
+  <div id="sessions-list"></div>
+</div>
+
+<!-- コンテキストメニュー（長押し用） -->
+<div class="ctx-overlay" id="ctx-overlay" onclick="closeCtx()"></div>
+<div class="ctx-menu" id="ctx-menu">
+  <button class="ctx-item" onclick="ctxRestore()">↩ セッション復元</button>
+  <button class="ctx-item danger" onclick="ctxDelete()">🗑 削除</button>
+</div>
+
+<script>
+  // ── パスワード認証 ──────────────────────────────
+  const PASSWORD = 'houbidouEC01'; // ← パスワードを変更する場合はここを編集
+  const AUTH_KEY = 'ws_auth_v1';
+  const AUTH_TOKEN = btoa(PASSWORD); // パスワードが変わると自動ログアウト
+
+  function checkAuth() {
+    if (localStorage.getItem(AUTH_KEY) === AUTH_TOKEN) {
+      document.getElementById('auth-overlay').style.display = 'none';
+    }
+  }
+
+  function checkPassword() {
+    const input = document.getElementById('auth-input').value;
+    if (input === PASSWORD) {
+      localStorage.setItem(AUTH_KEY, AUTH_TOKEN);
+      document.getElementById('auth-overlay').style.display = 'none';
+    } else {
+      document.getElementById('auth-error').textContent = 'パスワードが違います';
+      document.getElementById('auth-input').value = '';
+      document.getElementById('auth-input').focus();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
+    document.getElementById('auth-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPassword();
+    });
+  });
+  // ──────────────────────────────────────────────
+
+  const BASE_URL    = 'https://s3-ap-northeast-1.amazonaws.com/worldswitch-html-upload.world-switch.com/houbidou/save_image/240/';
+  const LS_CHECKS   = 'houbidou_chk_v1';
+  const LS_SESSIONS = 'houbidou_sessions_v1';
+
+  function getChecks()   { try { return JSON.parse(localStorage.getItem(LS_CHECKS)   || '{}'); } catch { return {}; } }
+  function setChecks(o)  { localStorage.setItem(LS_CHECKS,   JSON.stringify(o)); }
+  function getSessions() { try { return JSON.parse(localStorage.getItem(LS_SESSIONS) || '[]'); } catch { return []; } }
+  function setSessions(a){ localStorage.setItem(LS_SESSIONS, JSON.stringify(a)); }
+
+  let currentCodes = [];
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tabpane').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('pane-' + name).classList.add('active');
+    if (name === 'sessions') renderSessions();
+  }
+
+  function togglePanel() {
+    document.getElementById('input-panel').classList.toggle('collapsed');
+  }
+  function clearInput() {
+    document.getElementById('codes-input').value = '';
+    document.getElementById('codes-input').focus();
+  }
+
+  function parseCodes(raw) {
+    return [...new Set(
+      raw.split(/[\r\n,、\s]+/).map(s => s.trim()).filter(Boolean)
+    )];
+  }
+
+  function showItems() {
+    const raw = document.getElementById('codes-input').value;
+    const codes = parseCodes(raw);
+    if (!codes.length) return;
+
+    currentCodes = codes;
+    const checks = getChecks();
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+
+    codes.forEach((code, idx) => {
+      const checked = !!checks[code];
+      const imgUrl = `${BASE_URL}${encodeURIComponent(code)}/${encodeURIComponent(code)}-1.jpg`;
+
+      const card = document.createElement('div');
+      card.className = 'card' + (checked ? ' checked' : '');
+      card.id = 'c_' + code;
+      card.innerHTML = `
+        <div class="card-img-wrap">
+          <img src="${imgUrl}" alt="${escHtml(code)}" loading="lazy">
+          <div class="noimage-badge">NO IMAGE</div>
+          <div class="card-num">${idx + 1}. ${escHtml(code)}</div>
+        </div>
+        <label class="card-check">
+          <input type="checkbox" ${checked ? 'checked' : ''}>
+          <span>確認済み</span>
+        </label>
+      `;
+
+      card.querySelector('img').addEventListener('error', function() {
+        this.style.display = 'none';
+        card.querySelector('.noimage-badge').style.display = 'flex';
+      });
+      card.querySelector('input[type=checkbox]').addEventListener('change', function() {
+        toggleCheck(code, this.checked);
+      });
+
+      grid.appendChild(card);
+    });
+
+    updateStats();
+    document.getElementById('btn-save').style.display = 'block';
+    document.getElementById('input-panel').classList.add('collapsed');
+  }
+
+  function toggleCheck(code, checked) {
+    const checks = getChecks();
+    if (checked) checks[code] = true; else delete checks[code];
+    setChecks(checks);
+    const card = document.getElementById('c_' + code);
+    if (card) card.classList.toggle('checked', checked);
+    updateStats();
+  }
+
+  function clearChecks() {
+    if (!currentCodes.length) return;
+    if (!confirm('表示中のチェック状態をすべてリセットしますか？')) return;
+    const checks = getChecks();
+    currentCodes.forEach(code => delete checks[code]);
+    setChecks(checks);
+    document.querySelectorAll('.card').forEach(card => {
+      card.classList.remove('checked');
+      card.querySelector('input[type=checkbox]').checked = false;
+    });
+    updateStats();
+  }
+
+  function updateStats() {
+    const total = currentCodes.length;
+    const done  = document.querySelectorAll('.card.checked').length;
+    document.getElementById('stats').textContent = total ? `${total}件中 ${done}件確認済み` : '';
+  }
+
+  function saveSession() {
+    if (!currentCodes.length) return;
+    const dateStr = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'-');
+    const name = prompt('セッション名を入力してください', `${dateStr} 棚卸`);
+    if (name === null) return;
+    if (!name.trim()) { alert('セッション名を入力してください'); return; }
+
+    const checks = getChecks();
+    const sessionChecks = {};
+    currentCodes.forEach(code => { if (checks[code]) sessionChecks[code] = true; });
+
+    const sessions = getSessions();
+    sessions.unshift({
+      id: Date.now(),
+      name: name.trim(),
+      date: dateStr,
+      count: currentCodes.length,
+      codes: [...currentCodes],
+      checks: sessionChecks
+    });
+    if (sessions.length > 50) sessions.splice(50); // 上限50件・古いものを自動削除
+    setSessions(sessions);
+    alert(`「${name.trim()}」を保存しました`);
+  }
+
+  function renderSessions() {
+    const sessions = getSessions();
+    const list  = document.getElementById('sessions-list');
+    const empty = document.getElementById('sessions-empty');
+
+    list.innerHTML = '';
+    empty.style.display = sessions.length ? 'none' : 'block';
+    document.getElementById('sessions-count').textContent =
+      sessions.length ? `${sessions.length} 件 / 最大50件（超過分は自動削除）` : '';
+
+    sessions.forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'session-card';
+      card.innerHTML = `
+        <div class="session-info">
+          <div class="session-name">${escHtml(s.name)}</div>
+          <div class="session-meta">${s.count}件 · ${s.date}</div>
+        </div>
+        <div class="session-btns">
+          <button class="btn-restore-sm">復元</button>
+          <button class="btn-delete-sm">削除</button>
+        </div>
+      `;
+
+      card.querySelector('.btn-restore-sm').addEventListener('click', () => restoreSessionById(s.id));
+      card.querySelector('.btn-delete-sm').addEventListener('click', () => deleteSessionById(s.id));
+
+      // 長押し・右クリックでも操作可能（サブ手段）
+      let pressTimer = null;
+      card.addEventListener('touchstart', e => {
+        if (e.target.closest('.session-btns')) return;
+        pressTimer = setTimeout(() => showCtxMenu(e.touches[0].clientX, e.touches[0].clientY, s.id), 500);
+      }, { passive: true });
+      card.addEventListener('touchend',  () => clearTimeout(pressTimer));
+      card.addEventListener('touchmove', () => clearTimeout(pressTimer));
+      card.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        showCtxMenu(e.clientX, e.clientY, s.id);
+      });
+
+      list.appendChild(card);
+    });
+  }
+
+  function restoreSessionById(id) {
+    const session = getSessions().find(s => s.id === id);
+    if (!session) return;
+
+    switchTab('search');
+    document.getElementById('codes-input').value = session.codes.join('\n');
+
+    const checks = getChecks();
+    Object.assign(checks, session.checks);
+    setChecks(checks);
+
+    document.getElementById('input-panel').classList.remove('collapsed');
+    showItems();
+  }
+
+  function deleteSessionById(id) {
+    const session = getSessions().find(s => s.id === id);
+    if (!session) return;
+    if (!confirm(`「${session.name}」を削除しますか？`)) return;
+    setSessions(getSessions().filter(s => s.id !== id));
+    renderSessions();
+  }
+
+  let ctxTargetId = null;
+
+  function showCtxMenu(x, y, sessionId) {
+    ctxTargetId = sessionId;
+    const menu = document.getElementById('ctx-menu');
+    document.getElementById('ctx-overlay').style.display = 'block';
+    menu.style.display = 'block';
+    menu.style.left = `${Math.min(x, window.innerWidth  - menu.offsetWidth  - 12)}px`;
+    menu.style.top  = `${Math.min(y, window.innerHeight - menu.offsetHeight - 12)}px`;
+  }
+
+  function closeCtx() {
+    document.getElementById('ctx-overlay').style.display = 'none';
+    document.getElementById('ctx-menu').style.display = 'none';
+    ctxTargetId = null;
+  }
+
+  function ctxRestore() { const id = ctxTargetId; closeCtx(); restoreSessionById(id); }
+  function ctxDelete()  { const id = ctxTargetId; closeCtx(); deleteSessionById(id); }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+
+<!-- フッター（画面最下部に固定） -->
+<footer style="position:fixed; bottom:0; left:0; right:0; text-align:center; padding:8px 0; font-size:12px; color:#bbb; background:#f0f2f5; z-index:10;">
+  © houbidou_kuwahara
+</footer>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</body>
+</html>
