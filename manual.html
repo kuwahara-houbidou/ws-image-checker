@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WS画像チェックアプリ 操作マニュアル｜宝美堂</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', Arial, sans-serif;
+      background: #eef1f5;
+      color: #222;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* ── ヘッダー ── */
+    .header {
+      background: #35B79D;
+      border-top: 5px solid #1c8a76;
+      color: #fff;
+      padding: 28px 24px 26px;
+      text-align: center;
+    }
+    .header-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.22);
+      border-radius: 2px;
+      padding: 3px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 0.1em;
+    }
+    .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .header-sub { font-size: 13px; opacity: 0.85; }
+    .header-ver {
+      display: inline-block;
+      margin-top: 12px;
+      background: rgba(0,0,0,0.18);
+      border-radius: 2px;
+      padding: 3px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    /* ────────────────────────────────────────
+       2カラムレイアウト
+    ──────────────────────────────────────── */
+    .main-layout {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 20px 16px 0;
+    }
+    @media (min-width: 860px) {
+      .main-layout {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+        gap: 24px;
+        align-items: start;
+        padding: 28px 24px 0;
+      }
+    }
+
+    /* ── TOCサイドバー ── */
+    /* スマホ：スクロール追従（sticky） */
+    @media (max-width: 859px) {
+      .toc-sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #eef1f5;
+        padding-bottom: 6px;
+      }
+    }
+    /* PC：上部に固定してスクロール追従 */
+    @media (min-width: 860px) {
+      .toc-sidebar {
+        position: sticky;
+        top: 28px;
+        max-height: calc(100vh - 56px);
+        overflow-y: auto;
+      }
+    }
+
+    .toc-wrap-inner {
+      background: #fff;
+      border: 1px solid #dde1e7;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    /* ── TOC トグルボタン（スマホのみ） ── */
+    .toc-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 13px 16px;
+      background: none;
+      border: none;
+      border-bottom: 1px solid #eef0f3;
+      font-size: 13px;
+      font-weight: 800;
+      color: #35B79D;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .toc-toggle:active { background: #f8faf9; }
+    .toc-toggle-icon { font-size: 12px; transition: transform 0.2s; }
+    @media (min-width: 860px) {
+      .toc-toggle { display: none; }
+    }
+
+    /* ── TOC 本体 ── */
+    .toc-body { padding: 14px 16px 16px; }
+    .toc-body.collapsed { display: none; }
+    @media (min-width: 860px) {
+      .toc-body { display: block !important; padding-top: 16px; }
+      .toc-title-pc {
+        font-size: 10px;
+        font-weight: 800;
+        color: #35B79D;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+    }
+    @media (max-width: 859px) { .toc-title-pc { display: none; } }
+
+    .toc-body ol { padding-left: 18px; list-style: decimal; }
+    .toc-body li { font-size: 13px; padding: 3px 0; }
+    .toc-body a {
+      color: #555;
+      text-decoration: none;
+      display: block;
+      padding: 2px 4px;
+      border-radius: 2px;
+      transition: color 0.15s, background 0.15s;
+      line-height: 1.5;
+    }
+    .toc-body a:hover { color: #35B79D; background: #eaf7f4; }
+    .toc-body a.active { color: #35B79D; font-weight: 700; background: #e8f8f5; }
+
+    /* ── セクション共通 ── */
+    .section { margin-bottom: 20px; }
+    .section-inner {
+      background: #fff;
+      border-radius: 4px;
+      border: 1px solid #dde1e7;
+      padding: 24px 24px 22px;
+    }
+    .section-num {
+      display: inline-block;
+      background: #35B79D;
+      color: #fff;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      margin-bottom: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .section h2 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e8eaed;
+      line-height: 1.4;
+    }
+    .section h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #1c8a76;
+      margin: 22px 0 10px;
+      padding: 6px 10px;
+      background: #e8f8f5;
+      border-left: 3px solid #35B79D;
+      border-radius: 0 3px 3px 0;
+      letter-spacing: 0.04em;
+    }
+    p { margin-bottom: 10px; }
+
+    /* ── ナンバードステップ ── */
+    .steps { margin: 12px 0 4px; }
+    .step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+    .step-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #35B79D;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+    .step-body { flex: 1; font-size: 15px; }
+    .step-body strong { font-weight: 700; }
+
+    /* ── 箇条書き（◆）── */
+    .desc-list { margin: 10px 0 4px; }
+    .desc-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+    .desc-mark { color: #35B79D; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 3px; }
+    .desc-body { flex: 1; font-size: 15px; }
+    .desc-body strong { font-weight: 700; }
+
+    /* ── スクショ ── */
+    .screenshot-wrap { margin: 18px 0; text-align: center; }
+    .screenshot-wrap img {
+      max-width: 250px;
+      width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.13);
+      border: 1px solid #dde1e7;
+    }
+    .screenshot-caption { font-size: 12px; color: #999; margin-top: 7px; }
+    .screenshot-row { display: flex; gap: 14px; justify-content: center; margin: 18px 0; flex-wrap: wrap; }
+    .screenshot-row .screenshot-wrap { margin: 0; flex: 0 0 auto; }
+    .screenshot-row img { max-width: 195px; }
+    /* 横幅いっぱい2カラム */
+    .screenshot-row.full { justify-content: stretch; }
+    .screenshot-row.full .screenshot-wrap { flex: 1; min-width: 0; }
+    .screenshot-row.full img { max-width: 100%; width: 100%; }
+
+    /* ── グリーンのポイントボックス ── */
+    .point-box {
+      background: #e8f8f5;
+      border-left: 4px solid #35B79D;
+      border-radius: 0 4px 4px 0;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .point-label { font-size: 13px; font-weight: 800; color: #2b9980; margin-bottom: 6px; display: block; }
+
+    /* ── 黄色の注意ボックス ── */
+    .note-box {
+      background: #fffbee;
+      border-left: 4px solid #e8a800;
+      border-radius: 0 4px 4px 0;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .note-label { font-size: 13px; font-weight: 800; color: #b07d00; margin-bottom: 6px; display: block; }
+
+    /* ── 赤枠インストールボックス ── */
+    .install-box { border: 2px solid #d93025; border-radius: 4px; padding: 18px 18px 14px; margin: 16px 0; }
+    .install-box-title { font-size: 14px; font-weight: 800; color: #d93025; margin-bottom: 16px; text-align: center; }
+    .install-platform { margin-bottom: 18px; }
+    .install-platform:last-child { margin-bottom: 0; }
+    .install-platform-title { font-size: 13px; font-weight: 800; color: #444; margin-bottom: 10px; padding-bottom: 7px; border-bottom: 1px solid #ececec; }
+    .install-steps { padding-left: 0; list-style: none; }
+    .install-steps li { font-size: 14px; padding: 4px 0; display: flex; gap: 9px; align-items: flex-start; }
+    .install-step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #d93025; color: #fff; font-size: 11px; font-weight: 800;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .install-note { font-size: 12px; color: #d93025; font-weight: 700; margin-top: 10px; padding: 8px 10px; background: #fff3f2; border-radius: 2px; }
+
+    /* ── URLボックス ── */
+    .url-box { background: #f8f9fb; border: 1.5px solid #cfd4dc; border-radius: 4px; padding: 12px 16px; margin: 10px 0; font-size: 13px; word-break: break-all; }
+    .url-box a { color: #1a73e8; font-weight: 700; }
+
+    /* ── QRコード ── */
+    .qr-wrap { text-align: center; margin: 16px 0; }
+    .qr-wrap img { width: 150px; height: 150px; }
+    .qr-caption { font-size: 12px; color: #999; margin-top: 6px; }
+
+    /* ── 赤テキスト ── */
+    .text-red { color: #d93025; font-weight: 800; }
+    .text-green { color: #35B79D; font-weight: 800; }
+
+    /* ── 入力方法リスト ── */
+    .method-list { margin: 10px 0; padding: 0; list-style: none; }
+    .method-list li { font-size: 14px; padding: 4px 0; display: flex; gap: 8px; align-items: center; }
+    .method-mark { color: #35B79D; font-weight: 800; flex-shrink: 0; }
+
+    /* ── FAQ ── */
+    .faq-item { margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid #eef0f3; }
+    .faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .faq-q { display: flex; gap: 10px; align-items: flex-start; font-weight: 800; font-size: 15px; margin-bottom: 10px; line-height: 1.6; }
+    .faq-q-badge { flex-shrink: 0; background: #35B79D; color: #fff; border-radius: 2px; font-size: 12px; font-weight: 800; padding: 2px 8px; margin-top: 2px; }
+    .faq-a { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #444; line-height: 1.8; }
+    .faq-a-badge { flex-shrink: 0; background: #eef0f3; color: #666; border-radius: 2px; font-size: 12px; font-weight: 800; padding: 2px 8px; margin-top: 2px; }
+
+    /* ── 区切り線 ── */
+    .divider { border: none; border-top: 1px solid #eef0f3; margin: 18px 0; }
+
+    /* ── フッター ── */
+    .footer { max-width: 1080px; margin: 20px auto 0; padding: 0 16px 48px; text-align: center; font-size: 12px; color: #bbb; line-height: 1.8; }
+    @media (min-width: 860px) { .footer { padding-left: 24px; padding-right: 24px; } }
+
+    /* ── 印刷対応 ── */
+    @media print {
+      body { background: #fff; }
+      .toc-sidebar { position: static; }
+      .main-layout { display: block; }
+      .screenshot-wrap img { max-width: 190px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="header">
+  <div class="header-badge">宝美堂 社内専用</div>
+  <h1>🔍 WS画像チェックアプリ</h1>
+  <div class="header-sub">管理番号から商品画像をすばやく確認できるアプリです</div>
+  <div class="header-ver">操作マニュアル v1.13</div>
+</div>
+
+<!-- ─── 2カラムレイアウト開始 ─── -->
+<div class="main-layout">
+
+  <!-- TOCサイドバー -->
+  <aside class="toc-sidebar">
+    <div class="toc-wrap-inner">
+
+      <!-- トグルボタン（スマホのみ表示） -->
+      <button class="toc-toggle" id="toc-toggle" onclick="toggleToc()">
+        <span>目次</span>
+        <span class="toc-toggle-icon" id="toc-icon">▲</span>
+      </button>
+
+      <!-- TOC本体（スマホ：デフォルト展開） -->
+      <nav class="toc-body" id="toc-body">
+        <div class="toc-title-pc">目　次</div>
+        <ol>
+          <li><a href="#s1">このアプリについて</a></li>
+          <li><a href="#s2">インストール方法</a></li>
+          <li><a href="#s3">アクセス・ログイン</a></li>
+          <li><a href="#s4">管理番号を入力して画像を表示する</a></li>
+          <li><a href="#s5">確認済みチェックをつける</a></li>
+          <li><a href="#s6">作業内容を保存する（セッション保存）</a></li>
+          <li><a href="#s7">保存した履歴を呼び出す</a></li>
+          <li><a href="#s8">FAQ（よくある質問）</a></li>
+        </ol>
+      </nav>
+
+    </div>
+  </aside>
+
+  <!-- メインコンテンツ -->
+  <main class="main-content">
+
+    <!-- SECTION 1 -->
+    <div class="section" id="s1">
+      <div class="section-inner">
+        <div class="section-num">SECTION 1</div>
+        <h2>このアプリについて</h2>
+
+        <div class="screenshot-wrap">
+          <img src="スクショ/0.png" alt="アプリ画面イメージ">
+          <div class="screenshot-caption">アプリの画面イメージ（画像カード一覧）</div>
+        </div>
+
+        <p>管理番号(12桁)を貼り付けるだけで、WASABIに登録されている商品画像を一覧表示できるアプリです。スマートフォン・タブレット・PCのどれでも使えます。</p>
+
+        <h3>こんな場面で使います</h3>
+        <div class="desc-list">
+          <div class="desc-item">
+            <div class="desc-mark">◆</div>
+            <div class="desc-body">入出庫や棚卸時に管理番号と画像をスマホで照合したいとき</div>
+          </div>
+          <div class="desc-item">
+            <div class="desc-mark">◆</div>
+            <div class="desc-body">「この商品、WASABIに画像ちゃんと入ってるかな？」をすぐ確認したいとき</div>
+          </div>
+          <div class="desc-item">
+            <div class="desc-mark">◆</div>
+            <div class="desc-body">複数の商品をまとめてチェックして、確認済みを記録したいとき</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="s2">
+      <div class="section-inner">
+        <div class="section-num">SECTION 2</div>
+        <h2>インストール方法</h2>
+        <p>ブラウザから直接開くだけでも使えますが、スマホのホーム画面に追加するとアプリのようにすぐ起動できます。</p>
+        <div class="screenshot-wrap" style="max-width:370px; margin-left:auto; margin-right:auto;">
+          <img src="スクショ/0.5.png" alt="ホーム画面のアプリアイコン" style="max-width:100%; width:100%;">
+          <div class="screenshot-caption">ホーム画面に追加するとアプリとして起動できます</div>
+        </div>
+        <div class="install-box">
+          <div class="install-box-title">📲 スマホのホーム画面にアプリとして追加する方法</div>
+          <div class="install-platform">
+            <div class="install-platform-title">▼ Android（アンドロイド）スマホの方</div>
+            <ul class="install-steps">
+              <li><span class="install-step-num">1</span><strong>「Chrome（クローム）」</strong>でアプリのURLを開く</li>
+              <li><span class="install-step-num">2</span>右上の<strong>「⋮（タテ三点）」</strong>メニューボタンをタップ</li>
+              <li><span class="install-step-num">3</span><strong>「ホーム画面に追加」</strong>をタップ</li>
+            </ul>
+          </div>
+          <div class="install-platform">
+            <div class="install-platform-title">▼ iPhone（アイフォン）の方</div>
+            <ul class="install-steps">
+              <li><span class="install-step-num">1</span><strong>「Safari（サファリ）」</strong>でアプリのURLを開く</li>
+              <li><span class="install-step-num">2</span>下部の<strong>「共有ボタン（四角から矢印が出るアイコン）」</strong>をタップ</li>
+              <li><span class="install-step-num">3</span><strong>「ホーム画面に追加」</strong>をタップ</li>
+            </ul>
+            <div class="install-note">⚠ iPhoneは必ず「Safari」で開いてください（Chrome等では追加できません）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="s3">
+      <div class="section-inner">
+        <div class="section-num">SECTION 3</div>
+        <h2>アクセス・ログイン</h2>
+
+        <h3>アクセス方法</h3>
+        <p style="font-size:14px;">
+          下記URLをブラウザで開きます。<br>
+          <span style="font-size:13px; color:#666;">・Android → Chrome（クローム）<br>・iPhone → Safari（サファリ）</span>
+        </p>
+        <div class="url-box">
+          <a href="https://kuwahara-houbidou.github.io/ws-image-checker/tanakotsu_viewer.html" target="_blank">
+            https://kuwahara-houbidou.github.io/ws-image-checker/tanakotsu_viewer.html
+          </a>
+        </div>
+        <div class="qr-wrap">
+          <img src="QRコード/tanakotsu_viewer.svg" alt="アプリQRコード">
+          <div class="qr-caption">QRコードを読み取ってアクセスすることもできます</div>
+        </div>
+
+        <hr class="divider">
+
+        <h3>ログイン手順</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">アプリを開くと、パスワードの入力画面が表示されます。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">パスワード「<span class="text-red">houbidou01</span>」を入力して<span class="text-green">「ログイン」</span><strong></strong>をタップします。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">一度ログインすると、次回から同じ端末・同じブラウザでは自動でログイン状態が続きます。</div>
+          </div>
+        </div>
+        <div class="screenshot-wrap" style="max-width:370px; margin-left:auto; margin-right:auto;">
+          <img src="スクショ/1.png" alt="ログイン画面" style="max-width:100%; width:100%;">
+          <div class="screenshot-caption">ログイン画面（初回または再ログイン時に表示されます）</div>
+        </div>
+
+        <hr class="divider">
+
+        <h3>パスワードが再度求められるケース</h3>
+        <div class="note-box">
+          <span class="note-label">以下の状況では再ログインが必要です</span>
+          <div class="desc-list">
+            <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body">別の端末やブラウザで初めて開いたとき</div></div>
+            <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body">スマホの「履歴・サイトデータを削除」を実行したとき</div></div>
+            <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body">シークレットモード（プライベートブラウジング）で開いたとき</div></div>
+            <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body">パスワードが変更されたとき</div></div>
+          </div>
+          <p style="font-size:13px; margin-top:8px; margin-bottom:0;">※ アプリを閉じたり、端末を再起動しても自動ログアウトされません。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="s4">
+      <div class="section-inner">
+        <div class="section-num">SECTION 4</div>
+        <h2>管理番号を入力して画像を表示する</h2>
+
+        <h3>画像を表示する手順</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">上部のタブで<strong>「🔍 画像検索」</strong>が選ばれていることを確認します。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">入力エリア（白い枠）に12桁の管理番号を貼り付けるか、直接入力します。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body"><span class="text-green">「表示」</span><strong></strong>ボタンをタップすると、商品画像が一覧で表示されます。</div>
+          </div>
+        </div>
+        <div class="screenshot-row">
+          <div class="screenshot-wrap">
+            <img src="スクショ/2.png" alt="入力エリア（空の状態）">
+            <div class="screenshot-caption">入力エリア（空の状態）</div>
+          </div>
+          <div class="screenshot-wrap">
+            <img src="スクショ/3.png" alt="管理番号を入力した状態">
+            <div class="screenshot-caption">管理番号を貼り付けた状態</div>
+          </div>
+        </div>
+        <div class="point-box">
+          <span class="point-label">管理番号の入力形式について</span>
+          複数の管理番号を一度に入力できます。区切り方はどれでも OK です。
+          <ul class="method-list" style="margin-top:10px;">
+            <li><span class="method-mark">◆</span> <strong>改行区切り</strong>（1行に1つ）</li>
+            <li><span class="method-mark">◆</span> <strong>カンマ区切り</strong>（例：240500567091,240500561185）</li>
+            <li><span class="method-mark">◆</span> <strong>スペース区切り</strong>（例：240500567091 240500561185）</li>
+          </ul>
+          <p style="font-size:13px; margin-top:8px; margin-bottom:0;">同じ番号が重複していても、自動で1件にまとめます。</p>
+        </div>
+
+        <hr class="divider">
+
+        <h3>表示結果の見かた</h3>
+        <div class="screenshot-wrap">
+          <img src="スクショ/4.png" alt="画像カード一覧">
+          <div class="screenshot-caption">画像カード一覧（表示後）</div>
+        </div>
+        <div class="desc-list">
+          <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body"><strong>左上の黒いバッジ</strong>：並び順番号と管理番号が表示されます。</div></div>
+          <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body"><strong>NO IMAGE</strong>：WASABIに画像が登録されていない商品です。</div></div>
+          <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body"><strong>上部の「○件中 △件確認済み」</strong>：チェックの進捗がひと目でわかります。</div></div>
+        </div>
+        <div class="note-box">
+          <span class="note-label">入力パネルの開閉について</span>
+          「表示」ボタンを押すと入力パネルは自動で折りたたまれます。<br>
+          パネルのタイトル部分（▼ または ▶ のマーク）をタップすると再度開きます。
+        </div>
+
+        <div class="screenshot-wrap">
+          <img src="スクショ/5.png" alt="入力パネル展開＋カード全体表示">
+          <div class="screenshot-caption">入力パネルを展開した全体表示</div>
+        </div>
+
+        <hr class="divider">
+
+        <h3>クリア・チェックリセットについて</h3>
+        <div class="desc-list">
+          <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body"><strong>クリア</strong>：入力エリアの管理番号をすべて<strong>「消去」</strong>します。</div></div>
+          <div class="desc-item"><div class="desc-mark">◆</div><div class="desc-body"><strong>チェックリセット</strong>：現在表示中のカードのチェック状態をすべて<strong>「未チェック」</strong>に戻します。</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="s5">
+      <div class="section-inner">
+        <div class="section-num">SECTION 5</div>
+        <h2>確認済みチェックをつける</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">画像カードの下部にある<span class="text-green">「確認済みチェックボックス」</span><strong></strong>をタップします。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">チェックをつけるとカードが半透明になり「確認済み」に取り消し線が入ります。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">もう一度タップするとチェックが外れます。</div>
+          </div>
+        </div>
+        <div class="screenshot-wrap" style="max-width:370px; margin-left:auto; margin-right:auto;">
+          <img src="スクショ/5.2.png" alt="チェック状態のクローズアップ" style="max-width:100%; width:100%;">
+          <div class="screenshot-caption">チェックをつけるとカードが半透明になります</div>
+        </div>
+        <div class="point-box">
+          <span class="point-label">チェック状態は自動で保存されます</span>
+          チェックの状態は端末のブラウザに自動で記録されます。アプリを閉じても、次回同じ管理番号を表示したとき、前回のチェック状態が引き継がれます。
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="section" id="s6">
+      <div class="section-inner">
+        <div class="section-num">SECTION 6</div>
+        <h2>作業内容を保存する（セッション保存）</h2>
+        <p>管理番号のリストとチェック状態をまとめて<strong>「セッション」</strong>として名前をつけて保存できます。翌日に続きから確認したいときや、同じリストを何度も使いたいときに便利です。</p>
+
+        <div class="screenshot-wrap" style="max-width:370px; margin-left:auto; margin-right:auto;">
+          <img src="スクショ/5.5.png" alt="このセッションを保存ボタン" style="max-width:100%; width:100%;">
+          <div class="screenshot-caption">「💾 このセッションを保存」ボタン（画像表示後に上部に表示されます）</div>
+        </div>
+
+        <h3>保存の手順</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">画像を表示すると、画面上部に<span class="text-green"><strong>「💾 このセッションを保存」</span></span></strong>ボタンが現れます。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">ボタンをタップすると、<strong>「セッション名の入力ダイアログ」</strong>が表示されます。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">名前を入力して<span class="text-green"><strong>「OK」</strong></span>をタップします（例：「2026-06-10 棚卸」）。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body"><strong>「○○を保存しました」</strong>と表示されれば完了です。</div>
+          </div>
+        </div>
+        <div class="screenshot-row full">
+          <div class="screenshot-wrap">
+            <img src="スクショ/6.png" alt="セッション名入力ダイアログ">
+            <div class="screenshot-caption">セッション名を入力してOKをタップ</div>
+          </div>
+          <div class="screenshot-wrap">
+            <img src="スクショ/7.png" alt="保存完了メッセージ">
+            <div class="screenshot-caption">保存完了メッセージ</div>
+          </div>
+        </div>
+        <div class="note-box">
+          <span class="note-label">保存件数の上限について</span>
+          1台の端末に<strong>最大 50件</strong> まで保存できます。50件を超えると、古いものから自動的に削除されます。
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7 -->
+    <div class="section" id="s7">
+      <div class="section-inner">
+        <div class="section-num">SECTION 7</div>
+        <h2>保存した履歴を呼び出す</h2>
+        <div class="screenshot-wrap" style="max-width:370px; margin-left:auto; margin-right:auto;">
+          <img src="スクショ/8.png" alt="履歴（セッション）タブ" style="max-width:100%; width:100%;">
+          <div class="screenshot-caption">履歴（セッション）タブ</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">画面上部の<span class="text-green"><strong>「📁 履歴（セッション）」</strong></span>タブをタップします。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">保存したセッションの一覧が表示されます（新しいものが上に表示されます）。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body"><span class="text-green"><strong>「復元」</strong></span>をタップすると、そのセッションの管理番号とチェック状態が画像検索タブに読み込まれます。</div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">不要になったセッションは<span class="text-green"><strong>「削除」</strong></span>で消すことができます。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 8 : FAQ -->
+    <div class="section" id="s8">
+      <div class="section-inner">
+        <div class="section-num">SECTION 8</div>
+        <h2>FAQ（よくある質問）</h2>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.1</div><div>PCの画面に表示されている管理番号をスマホにコピーするには？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A.1</div><div>スマホのカメラアプリや<strong>「Googleレンズ」</strong>でPC画面を撮影すると、画像内の数字をテキストとして認識できます。認識された管理番号の範囲をなぞって<span class="text-green"><strong>「テキストをコピー」</strong></span>をタップし、このアプリの入力欄に貼り付けてください。</div></div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.2</div><div>「NO IMAGE」と表示された商品は？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A.2</div><div>WASABIに管理番号の商品画像が登録されていません。</div></div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.3</div><div>アップデートがあったとき、何か操作が必要ですか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A.3</div><div>特に何もしなくて大丈夫です（バックグラウンドで自動的に最新版に更新されます）。大きい変更の際はLINEでお知らせします。その際は <strong>アプリの再起動</strong> のみお願いします。</div></div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.4</div>
+          <div>ログインが再度求められたのですが？</div>
+        </div>
+          <div class="faq-a">
+              <div class="faq-a-badge">A.4</div>
+              <div>以下の場合は再ログインが必要です。<br><br>
+                <strong>・別の端末やブラウザで初めて開いたとき</strong><br>
+                <strong>・スマートフォンのブラウザデータを削除したとき</strong><br>
+                <strong>・シークレットモードで開いたとき</strong><br>
+                <strong>・パスワードが変更されたとき</strong><br>
+                <br>
+                アプリを閉じたり、端末を再起動しただけでは自動ログアウトはされません。
+              </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.5</div><div>保存したデータは他の人のスマホでも見られますか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A.5</div><div>いいえ。保存データはその端末のブラウザの中だけに保存されます。他の人の端末からは見えません。</div></div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.6</div><div>複数人が同時に使っても問題ありませんか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A.6</div><div>はい、何人同時に使っても問題ありません。このアプリはインターネットにデータを送らない設計のため、他の人の操作と干渉することはありません。チェック状態などはすべて自分の端末の中だけで管理されています。</div></div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.7</div><div>セキュリティ面は大丈夫ですか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A.7</div><div>はい、問題ありません。このアプリは個人情報を一切扱いません。保存されるのは管理番号とチェック状態のみで、すべて自分の端末の中だけに記録されます（外部サーバーには送られません）。表示される画像は、WASABIにすでに公開されているものをそのまま表示しているだけです。</div></div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q"><div class="faq-q-badge">Q.8</div><div>使っていて困ったことや改善要望があるときは？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A.8</div><div>EC事業部_桒原まで。改善要望などもお気軽にご連絡ください。</div></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div><!-- /.main-layout -->
+
+<!-- フッター -->
+<div class="footer">
+  <p>宝美堂_WS画像チェックアプリ 操作マニュアル v1.13</p>
+  <p style="margin-top:4px;">© houbidou_kuwahara</p>
+</div>
+
+<script>
+  // ── アコーディオントグル（スマホ用）──────────────
+  function toggleToc() {
+    const body = document.getElementById('toc-body');
+    const icon = document.getElementById('toc-icon');
+    const isCollapsed = body.classList.toggle('collapsed');
+    icon.textContent = isCollapsed ? '▼' : '▲';
+  }
+
+  // スマホでリンクをタップしたらTOCを閉じる
+  const isMobile = () => window.innerWidth < 860;
+  document.querySelectorAll('.toc-body a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (isMobile()) {
+        const body = document.getElementById('toc-body');
+        const icon = document.getElementById('toc-icon');
+        body.classList.add('collapsed');
+        icon.textContent = '▼';
+      }
+    });
+  });
+
+  // ── アクティブセクションのTOC追従 ──────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('.section[id]');
+    const tocLinks = document.querySelectorAll('.toc-body a[href^="#"]');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = '#' + entry.target.id;
+          tocLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === id);
+          });
+        }
+      });
+    }, {
+      rootMargin: '-10% 0px -65% 0px',
+      threshold: 0
+    });
+
+    sections.forEach(s => observer.observe(s));
+  });
+</script>
+
+</body>
+</html>
