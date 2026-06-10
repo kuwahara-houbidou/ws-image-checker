@@ -522,7 +522,7 @@
 
   function parseCodes(raw) {
     return [...new Set(
-      raw.split(/[\r\n,、\s]+/).map(s => s.trim()).filter(Boolean)
+      raw.split(/[\r\n,、\s]+/).map(s => s.trim()).filter(s => /^\d{12}$/.test(s))
     )];
   }
 
