@@ -264,6 +264,7 @@
     .install-platform-title { font-size: 13px; font-weight: 800; color: #444; margin-bottom: 10px; padding-bottom: 7px; border-bottom: 1px solid #ececec; }
     .install-steps { padding-left: 0; list-style: none; }
     .install-steps li { font-size: 14px; padding: 4px 0; display: flex; gap: 9px; align-items: flex-start; }
+    .install-steps .step-text { flex: 1; min-width: 0; }
     .install-step-num {
       display: inline-flex; align-items: center; justify-content: center;
       width: 20px; height: 20px; border-radius: 50%;
@@ -321,7 +322,7 @@
   <div class="header-badge">宝美堂 社内専用</div>
   <h1>🔍 WS画像チェックアプリ</h1>
   <div class="header-sub">管理番号から商品画像をすばやく確認できるアプリです</div>
-  <div class="header-ver">操作マニュアル v1.13</div>
+  <div class="header-ver">操作マニュアル v1.15</div>
 </div>
 
 <!-- ─── 2カラムレイアウト開始 ─── -->
@@ -404,17 +405,17 @@
           <div class="install-platform">
             <div class="install-platform-title">▼ Android（アンドロイド）スマホの方</div>
             <ul class="install-steps">
-              <li><span class="install-step-num">1</span><strong>「Chrome（クローム）」</strong>でアプリのURLを開く</li>
-              <li><span class="install-step-num">2</span>右上の<strong>「⋮（タテ三点）」</strong>メニューボタンをタップ</li>
-              <li><span class="install-step-num">3</span><strong>「ホーム画面に追加」</strong>をタップ</li>
+              <li><span class="install-step-num">1</span><span class="step-text"><strong>「Chrome（クローム）」</strong>でアプリのURLを開く</span></li>
+              <li><span class="install-step-num">2</span><span class="step-text">右上の<strong>「⋮（タテ三点）」</strong>をタップ</span></li>
+              <li><span class="install-step-num">3</span><span class="step-text"><strong>「ホーム画面に追加」</strong>をタップ</span></li>
             </ul>
           </div>
           <div class="install-platform">
             <div class="install-platform-title">▼ iPhone（アイフォン）の方</div>
             <ul class="install-steps">
-              <li><span class="install-step-num">1</span><strong>「Safari（サファリ）」</strong>でアプリのURLを開く</li>
-              <li><span class="install-step-num">2</span>下部の<strong>「共有ボタン（四角から矢印が出るアイコン）」</strong>をタップ</li>
-              <li><span class="install-step-num">3</span><strong>「ホーム画面に追加」</strong>をタップ</li>
+              <li><span class="install-step-num">1</span><span class="step-text"><strong>「Safari（サファリ）」</strong>でアプリのURLを開く</span></li>
+              <li><span class="install-step-num">2</span><span class="step-text">画面下部の<strong>「共有ボタン（↑箱マーク）」</strong>をタップ</span></li>
+              <li><span class="install-step-num">3</span><span class="step-text"><strong>「ホーム画面に追加」</strong>をタップ</span></li>
             </ul>
             <div class="install-note">⚠ iPhoneは必ず「Safari」で開いてください（Chrome等では追加できません）</div>
           </div>
@@ -517,8 +518,8 @@
           複数の管理番号を一度に入力できます。区切り方はどれでも OK です。
           <ul class="method-list" style="margin-top:10px;">
             <li><span class="method-mark">◆</span> <strong>改行区切り</strong>（1行に1つ）</li>
-            <li><span class="method-mark">◆</span> <strong>カンマ区切り</strong>（例：240500567091,240500561185）</li>
-            <li><span class="method-mark">◆</span> <strong>スペース区切り</strong>（例：240500567091 240500561185）</li>
+            <li><span class="method-mark">◆</span> <span><strong>カンマ区切り</strong><br><span style="font-size:12px;color:#888;">例：240500567091,240500561185</span></span></li>
+            <li><span class="method-mark">◆</span> <span><strong>スペース区切り</strong><br><span style="font-size:12px;color:#888;">例：240500567091 240500561185</span></span></li>
           </ul>
           <p style="font-size:13px; margin-top:8px; margin-bottom:0;">同じ番号が重複していても、自動で1件にまとめます。</p>
         </div>
@@ -671,26 +672,26 @@
         <h2>FAQ（よくある質問）</h2>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.1</div><div>PCの画面に表示されている管理番号をスマホにコピーするには？</div></div>
-          <div class="faq-a"><div class="faq-a-badge">A.1</div><div>スマホのカメラアプリや<strong>「Googleレンズ」</strong>でPC画面を撮影すると、画像内の数字をテキストとして認識できます。認識された管理番号の範囲をなぞって<span class="text-green"><strong>「テキストをコピー」</strong></span>をタップし、このアプリの入力欄に貼り付けてください。</div></div>
+          <div class="faq-q"><div class="faq-q-badge">Q1</div><div>PCの画面に表示されている管理番号をスマホにコピーするには？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A1</div><div>スマホのカメラアプリや<a href="https://share.google/uLXfsqZzJ9vk7RuaV" target="_blank" style="color:#35B79D;font-weight:800;">「Googleレンズ」</a>でPC画面を撮影すると、画像内の数字をテキストとして認識できます。認識された管理番号の範囲をなぞって<span class="text-green"><strong>「テキストをコピー」</strong></span>をタップし、このアプリの入力欄に貼り付けてください。</div></div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.2</div><div>「NO IMAGE」と表示された商品は？</div></div>
-          <div class="faq-a"><div class="faq-a-badge">A.2</div><div>WASABIに管理番号の商品画像が登録されていません。</div></div>
+          <div class="faq-q"><div class="faq-q-badge">Q2</div><div>「NO IMAGE」と表示された商品は？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A2</div><div>WASABIに管理番号の商品画像が登録されていません。</div></div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.3</div><div>アップデートがあったとき、何か操作が必要ですか？</div></div>
-          <div class="faq-a"><div class="faq-a-badge">A.3</div><div>特に何もしなくて大丈夫です（バックグラウンドで自動的に最新版に更新されます）。大きい変更の際はLINEでお知らせします。その際は <strong>アプリの再起動</strong> のみお願いします。</div></div>
+          <div class="faq-q"><div class="faq-q-badge">Q3</div><div>アップデートがあったとき、何か操作が必要ですか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A3</div><div>特に何もしなくて大丈夫です（バックグラウンドで自動的に最新版に更新されます）。大きい変更の際はLINEでお知らせします。その際は <strong>アプリの再起動</strong> のみお願いします。</div></div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.4</div>
+          <div class="faq-q"><div class="faq-q-badge">Q4</div>
           <div>ログインが再度求められたのですが？</div>
         </div>
           <div class="faq-a">
-              <div class="faq-a-badge">A.4</div>
+              <div class="faq-a-badge">A4</div>
               <div>以下の場合は再ログインが必要です。<br><br>
                 <strong>・別の端末やブラウザで初めて開いたとき</strong><br>
                 <strong>・スマートフォンのブラウザデータを削除したとき</strong><br>
@@ -703,23 +704,23 @@
         </div>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.5</div><div>保存したデータは他の人のスマホでも見られますか？</div></div>
-          <div class="faq-a"><div class="faq-a-badge">A.5</div><div>いいえ。保存データはその端末のブラウザの中だけに保存されます。他の人の端末からは見えません。</div></div>
+          <div class="faq-q"><div class="faq-q-badge">Q5</div><div>保存したデータは他の人のスマホでも見られますか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A5</div><div>いいえ。保存データはその端末のブラウザの中だけに保存されます。他の人の端末からは見えません。</div></div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.6</div><div>複数人が同時に使っても問題ありませんか？</div></div>
-          <div class="faq-a"><div class="faq-a-badge">A.6</div><div>はい、何人同時に使っても問題ありません。このアプリはインターネットにデータを送らない設計のため、他の人の操作と干渉することはありません。チェック状態などはすべて自分の端末の中だけで管理されています。</div></div>
+          <div class="faq-q"><div class="faq-q-badge">Q6</div><div>複数人が同時に使っても問題ありませんか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A6</div><div>はい、何人同時に使っても問題ありません。このアプリはインターネットにデータを送らない設計のため、他の人の操作と干渉することはありません。チェック状態などはすべて自分の端末の中だけで管理されています。</div></div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.7</div><div>セキュリティ面は大丈夫ですか？</div></div>
-          <div class="faq-a"><div class="faq-a-badge">A.7</div><div>はい、問題ありません。このアプリは個人情報を一切扱いません。保存されるのは管理番号とチェック状態のみで、すべて自分の端末の中だけに記録されます（外部サーバーには送られません）。表示される画像は、WASABIにすでに公開されているものをそのまま表示しているだけです。</div></div>
+          <div class="faq-q"><div class="faq-q-badge">Q7</div><div>セキュリティ面は大丈夫ですか？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A7</div><div>はい、問題ありません。このアプリは個人情報を一切扱いません。保存されるのは管理番号とチェック状態のみで、すべて自分の端末の中だけに記録されます（外部サーバーには送られません）。表示される画像は、WASABIにすでに公開されているものをそのまま表示しているだけです。</div></div>
         </div>
 
         <div class="faq-item">
-          <div class="faq-q"><div class="faq-q-badge">Q.8</div><div>使っていて困ったことや改善要望があるときは？</div></div>
-          <div class="faq-a"><div class="faq-a-badge">A.8</div><div>EC事業部_桒原まで。改善要望などもお気軽にご連絡ください。</div></div>
+          <div class="faq-q"><div class="faq-q-badge">Q8</div><div>使っていて困ったことや改善要望があるときは？</div></div>
+          <div class="faq-a"><div class="faq-a-badge">A8</div><div>EC事業部_桒原まで。改善要望などもお気軽にご連絡ください。</div></div>
         </div>
 
       </div>
@@ -730,7 +731,7 @@
 
 <!-- フッター -->
 <div class="footer">
-  <p>宝美堂_WS画像チェックアプリ 操作マニュアル v1.13</p>
+  <p>宝美堂_WS画像チェックアプリ 操作マニュアル v1.15</p>
   <p style="margin-top:4px;">© houbidou_kuwahara</p>
 </div>
 
