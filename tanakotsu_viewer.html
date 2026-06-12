@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>宝美堂_WS画像チェックツール_v1.15</title>
+  <title>宝美堂_WS画像チェックツール_v1.16</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="theme-color" content="#35B79D">
@@ -17,8 +17,8 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
       background: #f0f2f5;
-      padding: 12px;
-      padding-bottom: 36px;
+      padding: 0 12px 12px;
+      padding-bottom: calc(76px + env(safe-area-inset-bottom));
       min-height: 100vh;
     }
 
@@ -35,11 +35,11 @@
     }
     .auth-box {
       background: #fff;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 36px 24px 28px;
       width: 100%;
       max-width: 320px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.13);
       text-align: center;
     }
     .auth-logo { font-size: 44px; margin-bottom: 10px; }
@@ -72,32 +72,20 @@
     .btn-login:active { background: #2a9a84; }
     .auth-error { font-size: 13px; color: #e53935; margin-top: 12px; min-height: 18px; }
 
-    /* ── タブバー（画面最上部に固定） ── */
-    .tabbar {
+    /* ── アプリヘッダー ── */
+    .app-header {
+      display: flex;
+      align-items: center;
+      height: 50px;
+      background: #f0f2f5;
       position: sticky;
       top: 0;
-      z-index: 50;
-      display: flex;
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.10);
-      margin: -12px -12px 14px -12px;
+      z-index: 40;
     }
-    .tab {
-      flex: 1;
-      padding: 14px 0;
-      border: none;
-      background: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      color: #bbb;
-      cursor: pointer;
-      transition: color 0.2s, background 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .tab.active {
-      background: #f0f2f5;
-      color: #1a1a1a;
+    h1.app-title {
+      font-size: 18px;
       font-weight: 700;
+      color: #1a1a1a;
     }
 
     /* ── タブペイン ── */
@@ -107,9 +95,9 @@
     /* ── 入力パネル（アコーディオン） ── */
     .panel {
       background: #fff;
-      border-radius: 8px;
+      border-radius: 12px;
       margin-bottom: 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      box-shadow: 0 1px 5px rgba(0,0,0,0.10);
       overflow: hidden;
     }
     .panel-header {
@@ -121,18 +109,19 @@
       user-select: none;
       -webkit-user-select: none;
     }
-    .panel-header:active { background: #f5f5f5; }
-
-    h1 { font-size: 17px; font-weight: 700; color: #222; }
+    .panel-header:active { background: #f7f7f7; }
+    .panel-title-row { display: flex; align-items: center; gap: 8px; }
+    .panel-icon { font-size: 17px; }
+    .panel-title { font-size: 15px; font-weight: 700; color: #222; }
+    .panel-status { font-size: 12px; color: #35B79D; font-weight: 600; margin-left: 2px; }
 
     .toggle-icon {
-      font-size: 13px;
-      color: #888;
+      font-size: 18px;
+      color: #aaa;
       transition: transform 0.25s;
       flex-shrink: 0;
-      margin-left: 8px;
     }
-    .panel.collapsed .toggle-icon { transform: rotate(-90deg); }
+    .panel.collapsed .toggle-icon { transform: rotate(-180deg); }
 
     .panel-body {
       padding: 0 16px 16px;
@@ -147,76 +136,90 @@
       padding-bottom: 0;
     }
 
+    .panel-hint {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 10px;
+      line-height: 1.7;
+    }
+
     textarea {
       width: 100%;
-      height: 200px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 10px;
+      height: 150px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 12px;
       font-size: 14px;
       font-family: monospace;
       resize: vertical;
       outline: none;
-      line-height: 1.5;
+      line-height: 1.6;
+      color: #333;
     }
-    textarea:focus { border-color: #43a047; }
+    textarea:focus { border-color: #35B79D; }
 
-    .hint {
-      font-size: 11px;
-      color: #999;
-      margin-top: 6px;
-      line-height: 1.7;
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
     }
-
     button {
-      padding: 12px 0;
       border: none;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: 600;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
+    .btn-clear {
+      flex: 1;
+      padding: 12px 0;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      background: #fff;
+    }
+    .btn-clear:active { background: #f5f5f5; }
     .btn-show {
-      display: block;
-      width: 100%;
-      margin-top: 10px;
-      background: #35B79D;
+      flex: 2;
+      padding: 12px 0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
       color: #fff;
+      background: #35B79D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
     .btn-show:active { background: #2a9a84; }
 
-    .btn-row { display: flex; gap: 8px; margin-top: 8px; }
-    .btn-sub { flex: 1; background: #e8eaed; color: #555; }
-    .btn-sub:active { background: #dadce0; }
-
-    /* ── 統計バー + 保存ボタン ── */
-    .statsbar {
-      display: flex;
+    /* ── 検索結果ヘッダー ── */
+    .results-header {
+      display: none;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      min-height: 28px;
+      margin-bottom: 10px;
     }
-    .stats { font-size: 14px; color: #555; }
-
-    .btn-save {
-      padding: 7px 14px;
+    .results-count {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .btn-select-all {
       font-size: 13px;
       font-weight: 600;
-      background: #1a73e8;
-      color: #fff;
+      color: #35B79D;
+      background: transparent;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      display: none;
+      padding: 4px 0;
     }
-    .btn-save:active { background: #1557b0; }
+    .btn-select-all:active { opacity: 0.6; }
 
     /* ── カードグリッド ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin-bottom: 12px;
     }
@@ -224,22 +227,19 @@
     /* ── カード ── */
     .card {
       background: #fff;
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      transition: opacity .2s, background .2s;
+      border-radius: 12px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+      overflow: hidden;
+      transition: opacity .2s;
     }
-    .card.checked { background: #f5f5f5; opacity: 0.5; }
+    .card.checked { opacity: 0.45; }
 
+    /* 画像エリア */
     .card-img-wrap {
       position: relative;
       width: 100%;
       padding-top: 100%;
       background: #f3f3f3;
-      border-radius: 4px;
       overflow: hidden;
     }
     .card-img-wrap img {
@@ -249,61 +249,164 @@
       height: 100%;
       object-fit: contain;
     }
-    .card-num {
+
+    /* 確認済みオーバーレイ */
+    .check-overlay {
+      display: none;
       position: absolute;
-      top: 5px;
-      left: 5px;
-      background: rgba(0,0,0,0.58);
-      color: #fff;
-      font-size: 10px;
-      font-family: monospace;
-      padding: 2px 6px;
-      border-radius: 3px;
-      max-width: 92%;
-      word-break: break-all;
-      line-height: 1.4;
+      inset: 0;
+      background: rgba(53,183,157,0.22);
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
     }
-    .noimage-badge {
+    .check-overlay-icon {
+      width: 52px;
+      height: 52px;
+      background: #35B79D;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 2px 12px rgba(53,183,157,0.45);
+    }
+    .card.checked .check-overlay { display: flex; }
+
+    /* NO IMAGE */
+    .noimage-wrap {
       position: absolute;
       inset: 0;
       display: none;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
-      font-weight: 700;
-      color: #bbb;
-      background: #f3f3f3;
+      background: #eef2f7;
+      gap: 6px;
     }
-    .card-check {
+    .noimage-wrap span { font-size: 11px; color: #aaa; font-weight: 600; }
+
+    /* 枚数ラベル */
+    .card-num {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(0,0,0,0.52);
+      color: #fff;
+      font-size: 9px;
+      font-family: monospace;
+      padding: 2px 5px;
+      border-radius: 3px;
+      z-index: 3;
+    }
+
+    /* カード下部 */
+    .card-footer {
       display: flex;
       align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      padding: 2px 0;
+      padding: 8px 10px;
+      gap: 6px;
+      border-top: 1px solid #f0f0f0;
     }
-    .card-check input[type=checkbox] {
-      width: 20px;
-      height: 20px;
+    .card-code {
+      flex: 1;
+      font-size: 10px;
+      font-family: monospace;
+      color: #555;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .card-status {
+      font-size: 11px;
+      font-weight: 600;
+      color: #aaa;
+      white-space: nowrap;
+    }
+    .card.checked .card-status { color: #35B79D; }
+    .card-checkbox {
+      width: 18px;
+      height: 18px;
       cursor: pointer;
       flex-shrink: 0;
+      accent-color: #35B79D;
     }
-    .card-check span { font-size: 13px; color: #333; }
-    .card.checked .card-check span { text-decoration: line-through; color: #aaa; }
+
+    /* ── 保存バー（固定） ── */
+    .save-bar {
+      display: none;
+      position: fixed;
+      bottom: calc(56px + env(safe-area-inset-bottom));
+      left: 0;
+      right: 0;
+      padding: 8px 12px;
+      background: rgba(240,242,245,0.96);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 45;
+    }
+    .btn-save-fixed {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #1a2332;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+    }
+    .btn-save-fixed:active { background: #0f1620; }
+
+    /* ── ボトムナビ ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(56px + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
+      background: #fff;
+      border-top: 1px solid #e8eaed;
+      display: flex;
+      z-index: 50;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border: none;
+      background: transparent;
+      font-size: 10px;
+      font-weight: 600;
+      color: #bbb;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.15s;
+    }
+    .nav-item .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-item.active { color: #35B79D; }
 
     /* ── 履歴タブ ── */
-    .sessions-hint {
-      font-size: 12px;
-      color: #aaa;
-      text-align: center;
-      padding: 10px 0 4px;
+    .sessions-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
     }
-    .sessions-count {
-      font-size: 12px;
-      color: #bbb;
-      text-align: center;
-      padding: 0 0 14px;
+    .sessions-desc {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 16px;
+      line-height: 1.6;
     }
     .sessions-empty {
       text-align: center;
@@ -312,57 +415,96 @@
       color: #bbb;
     }
 
+    /* セッションカード */
     .session-card {
       background: #fff;
-      border-radius: 8px;
-      padding: 18px 14px;
+      border-radius: 12px;
+      padding: 16px;
       margin-bottom: 10px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.09);
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
     }
+    .session-card.interrupted { background: #e8f4fe; }
 
-    .session-info { flex: 1; min-width: 0; }
+    .session-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .session-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #35B79D;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+    .session-dot.interrupted { background: #aaa; }
     .session-name {
       font-size: 15px;
       font-weight: 700;
       color: #222;
-      margin-bottom: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      flex: 1;
+      line-height: 1.35;
     }
-    .session-meta { font-size: 13px; color: #888; }
 
-    .session-btns { display: flex; gap: 10px; flex-shrink: 0; }
-
-    .btn-restore-sm {
-      padding: 8px 19px;
-      font-size: 16px;
-      font-weight: 600;
-      background: transparent;
-      color: #35B79D;
-      border: 2px solid #35B79D;
-      border-radius: 7px;
-      cursor: pointer;
+    .session-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
     }
-    .btn-restore-sm:active { background: #e0f5f2; }
-
-    .btn-delete-sm {
-      padding: 8px 19px;
-      font-size: 16px;
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
       font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: #f0f2f5;
+      color: #555;
+    }
+    .badge.done { background: #e0f5f2; color: #1a7a6a; }
+    .badge.partial { background: #fff3e0; color: #e65100; }
+
+    .session-btns { display: flex; gap: 8px; }
+    .btn-outline-danger {
+      flex: 1;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 700;
       background: transparent;
       color: #e53935;
-      border: 2px solid #e53935;
-      border-radius: 7px;
-      cursor: pointer;
+      border: 1.5px solid #e53935;
+      border-radius: 8px;
     }
-    .btn-delete-sm:active { background: #ffebee; }
+    .btn-outline-danger:active { background: #ffebee; }
+    .btn-outline-primary {
+      flex: 1;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 700;
+      background: transparent;
+      color: #35B79D;
+      border: 1.5px solid #35B79D;
+      border-radius: 8px;
+    }
+    .btn-outline-primary:active { background: #e0f5f2; }
+    .btn-solid-primary {
+      flex: 1;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 700;
+      background: #35B79D;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+    }
+    .btn-solid-primary:active { background: #2a9a84; }
 
     /* ── コンテキストメニュー（長押し・右クリック） ── */
     .ctx-overlay {
@@ -376,8 +518,8 @@
       position: fixed;
       z-index: 101;
       background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.20);
       overflow: hidden;
       min-width: 160px;
     }
@@ -412,34 +554,36 @@
   </div>
 </div>
 
-<!-- タブバー -->
-<div class="tabbar">
-  <button class="tab active" id="tab-search" onclick="switchTab('search')">🔍 画像検索</button>
-  <button class="tab" id="tab-sessions" onclick="switchTab('sessions')">📁 履歴（セッション）</button>
-</div>
+<!-- アプリヘッダー -->
+<header class="app-header">
+  <h1 class="app-title">画像検索ツール</h1>
+</header>
 
 <!-- ══ 検索タブ ══ -->
 <div class="tabpane active" id="pane-search">
 
   <div class="panel" id="input-panel">
     <div class="panel-header" onclick="togglePanel()">
-      <h1>宝美堂_WS画像チェックツール_v1.15</h1>
-      <span class="toggle-icon">▼</span>
+      <div class="panel-title-row">
+        <span class="panel-icon">📋</span>
+        <span class="panel-title">管理番号入力</span>
+        <span class="panel-status" id="panel-status"></span>
+      </div>
+      <span class="toggle-icon">∧</span>
     </div>
     <div class="panel-body">
-      <textarea id="codes-input" placeholder="ここに12桁の管理番号を入力"></textarea>
-      <div class="hint">※改行・カンマ・スペース区切り対応<br>※画像はWSから取得しています</div>
-      <button class="btn-show" onclick="showItems()">表示</button>
+      <p class="panel-hint">12桁の管理番号を改行区切りで入力してください。<br>※改行・カンマ・スペース区切り対応<br>※画像はWSから取得しています</p>
+      <textarea id="codes-input" placeholder="240500567091&#10;240500567092&#10;..."></textarea>
       <div class="btn-row">
-        <button class="btn-sub" onclick="clearInput()">クリア</button>
-        <button class="btn-sub" onclick="clearChecks()">チェックリセット</button>
+        <button class="btn-clear" onclick="clearInput()">クリア</button>
+        <button class="btn-show" onclick="showItems()">🔍 表示</button>
       </div>
     </div>
   </div>
 
-  <div class="statsbar">
-    <div class="stats" id="stats"></div>
-    <button class="btn-save" id="btn-save" onclick="saveSession()">💾 このセッションを保存</button>
+  <div class="results-header" id="results-header">
+    <div class="results-count" id="results-count"></div>
+    <button class="btn-select-all" id="btn-select-all" onclick="toggleSelectAll()">すべて選択</button>
   </div>
 
   <div class="grid" id="grid"></div>
@@ -448,13 +592,30 @@
 
 <!-- ══ 履歴タブ ══ -->
 <div class="tabpane" id="pane-sessions">
-  <div class="sessions-hint">長押し（PCは右クリック）でも操作できます</div>
-  <div class="sessions-count" id="sessions-count"></div>
+  <div class="sessions-title">検索履歴</div>
+  <div class="sessions-desc">過去の検証セッションを確認し、必要に応じて状態を復元できます。</div>
   <div id="sessions-empty" class="sessions-empty">保存済みの履歴はありません</div>
   <div id="sessions-list"></div>
 </div>
 
-<!-- コンテキストメニュー（長押し用） -->
+<!-- 保存バー（固定） -->
+<div class="save-bar" id="save-bar">
+  <button class="btn-save-fixed" onclick="saveSession()">💾 このセッションを保存</button>
+</div>
+
+<!-- ボトムナビ -->
+<nav class="bottom-nav">
+  <button class="nav-item active" id="nav-search" onclick="switchTab('search')">
+    <span class="nav-icon">🔍</span>
+    <span>画像検索</span>
+  </button>
+  <button class="nav-item" id="nav-sessions" onclick="switchTab('sessions')">
+    <span class="nav-icon">🕐</span>
+    <span>履歴</span>
+  </button>
+</nav>
+
+<!-- コンテキストメニュー（長押し・右クリック） -->
 <div class="ctx-overlay" id="ctx-overlay" onclick="closeCtx()"></div>
 <div class="ctx-menu" id="ctx-menu">
   <button class="ctx-item" onclick="ctxRestore()">↩ セッション復元</button>
@@ -463,16 +624,15 @@
 
 <script>
   // ── パスワード認証 ──────────────────────────────
-  const PASSWORD = 'houbidou01'; // ← パスワードを変更する場合はここを編集
-  const AUTH_KEY = 'ws_auth_v1';
-  const AUTH_TOKEN = btoa(PASSWORD); // パスワードが変わると自動ログアウト
+  const PASSWORD  = 'houbidou01';
+  const AUTH_KEY  = 'ws_auth_v1';
+  const AUTH_TOKEN = btoa(PASSWORD);
 
   function checkAuth() {
     if (localStorage.getItem(AUTH_KEY) === AUTH_TOKEN) {
       document.getElementById('auth-overlay').style.display = 'none';
     }
   }
-
   function checkPassword() {
     const input = document.getElementById('auth-input').value;
     if (input === PASSWORD) {
@@ -484,36 +644,38 @@
       document.getElementById('auth-input').focus();
     }
   }
-
   document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     document.getElementById('auth-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') checkPassword();
     });
   });
-  // ──────────────────────────────────────────────
 
+  // ── 定数 ──────────────────────────────────────
   const BASE_URL    = 'https://s3-ap-northeast-1.amazonaws.com/worldswitch-html-upload.world-switch.com/houbidou/save_image/240/';
   const LS_CHECKS   = 'houbidou_chk_v1';
   const LS_SESSIONS = 'houbidou_sessions_v1';
 
-  function getChecks()   { try { return JSON.parse(localStorage.getItem(LS_CHECKS)   || '{}'); } catch { return {}; } }
-  function setChecks(o)  { localStorage.setItem(LS_CHECKS,   JSON.stringify(o)); }
-  function getSessions() { try { return JSON.parse(localStorage.getItem(LS_SESSIONS) || '[]'); } catch { return []; } }
-  function setSessions(a){ localStorage.setItem(LS_SESSIONS, JSON.stringify(a)); }
+  function getChecks()    { try { return JSON.parse(localStorage.getItem(LS_CHECKS)   || '{}'); } catch { return {}; } }
+  function setChecks(o)   { localStorage.setItem(LS_CHECKS,   JSON.stringify(o)); }
+  function getSessions()  { try { return JSON.parse(localStorage.getItem(LS_SESSIONS) || '[]'); } catch { return []; } }
+  function setSessions(a) { localStorage.setItem(LS_SESSIONS, JSON.stringify(a)); }
 
   let currentCodes = [];
 
+  // ── タブ切り替え ──────────────────────────────
   function switchTab(name) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tabpane').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    document.getElementById('pane-' + name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+    document.getElementById('pane-'  + name).classList.add('active');
+    document.getElementById('nav-'   + name).classList.add('active');
     if (name === 'sessions') renderSessions();
   }
 
+  // ── 入力パネル ────────────────────────────────
   function togglePanel() {
-    document.getElementById('input-panel').classList.toggle('collapsed');
+    const panel = document.getElementById('input-panel');
+    panel.classList.toggle('collapsed');
   }
   function clearInput() {
     document.getElementById('codes-input').value = '';
@@ -526,6 +688,7 @@
     )];
   }
 
+  // ── 商品カード表示 ────────────────────────────
   function showItems() {
     const raw = document.getElementById('codes-input').value;
     const codes = parseCodes(raw);
@@ -538,7 +701,7 @@
 
     codes.forEach((code, idx) => {
       const checked = !!checks[code];
-      const imgUrl = `${BASE_URL}${encodeURIComponent(code)}/${encodeURIComponent(code)}-1.jpg`;
+      const imgUrl  = `${BASE_URL}${encodeURIComponent(code)}/${encodeURIComponent(code)}-1.jpg`;
 
       const card = document.createElement('div');
       card.className = 'card' + (checked ? ' checked' : '');
@@ -546,20 +709,31 @@
       card.innerHTML = `
         <div class="card-img-wrap">
           <img src="${imgUrl}" alt="${escHtml(code)}" loading="lazy">
-          <div class="noimage-badge">NO IMAGE</div>
-          <div class="card-num">${idx + 1}. ${escHtml(code)}</div>
+          <div class="check-overlay">
+            <div class="check-overlay-icon">✓</div>
+          </div>
+          <div class="noimage-wrap">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <polyline points="3,17 8,12 11,15 14,11 21,17"/>
+              <line x1="2" y1="2" x2="22" y2="22"/>
+            </svg>
+            <span>No Image</span>
+          </div>
+          <div class="card-num">${idx + 1}</div>
         </div>
-        <label class="card-check">
-          <input type="checkbox" ${checked ? 'checked' : ''}>
-          <span>確認済み</span>
-        </label>
+        <div class="card-footer">
+          <span class="card-code">${escHtml(code)}</span>
+          <span class="card-status">${checked ? '確認済み' : '未確認'}</span>
+          <input type="checkbox" class="card-checkbox" ${checked ? 'checked' : ''}>
+        </div>
       `;
 
       card.querySelector('img').addEventListener('error', function() {
         this.style.display = 'none';
-        card.querySelector('.noimage-badge').style.display = 'flex';
+        card.querySelector('.noimage-wrap').style.display = 'flex';
       });
-      card.querySelector('input[type=checkbox]').addEventListener('change', function() {
+      card.querySelector('.card-checkbox').addEventListener('change', function() {
         toggleCheck(code, this.checked);
       });
 
@@ -567,41 +741,58 @@
     });
 
     updateStats();
-    document.getElementById('btn-save').style.display = 'block';
+    document.getElementById('save-bar').style.display = 'block';
+    document.getElementById('results-header').style.display = 'flex';
+    document.getElementById('panel-status').textContent = `${codes.length}件`;
     document.getElementById('input-panel').classList.add('collapsed');
   }
 
+  // ── チェック操作 ──────────────────────────────
   function toggleCheck(code, checked) {
     const checks = getChecks();
     if (checked) checks[code] = true; else delete checks[code];
     setChecks(checks);
     const card = document.getElementById('c_' + code);
-    if (card) card.classList.toggle('checked', checked);
-    updateStats();
-  }
-
-  function clearChecks() {
-    if (!currentCodes.length) return;
-    if (!confirm('表示中のチェック状態をすべてリセットしますか？')) return;
-    const checks = getChecks();
-    currentCodes.forEach(code => delete checks[code]);
-    setChecks(checks);
-    document.querySelectorAll('.card').forEach(card => {
-      card.classList.remove('checked');
-      card.querySelector('input[type=checkbox]').checked = false;
-    });
+    if (card) {
+      card.classList.toggle('checked', checked);
+      card.querySelector('.card-status').textContent = checked ? '確認済み' : '未確認';
+    }
     updateStats();
   }
 
   function updateStats() {
     const total = currentCodes.length;
     const done  = document.querySelectorAll('.card.checked').length;
-    document.getElementById('stats').textContent = total ? `${total}件中 ${done}件確認済み` : '';
+    document.getElementById('results-count').textContent = `検索結果（${total}件）`;
+    const btn = document.getElementById('btn-select-all');
+    btn.textContent = (done === total && total > 0) ? 'すべて解除' : 'すべて選択';
   }
 
+  // ── すべて選択 / 解除 ──────────────────────────
+  function toggleSelectAll() {
+    const total = currentCodes.length;
+    const done  = document.querySelectorAll('.card.checked').length;
+    const toCheck = !(done === total && total > 0);
+
+    const checks = getChecks();
+    currentCodes.forEach(code => {
+      if (toCheck) checks[code] = true; else delete checks[code];
+      const card = document.getElementById('c_' + code);
+      if (card) {
+        card.classList.toggle('checked', toCheck);
+        card.querySelector('.card-status').textContent = toCheck ? '確認済み' : '未確認';
+        card.querySelector('.card-checkbox').checked = toCheck;
+      }
+    });
+    setChecks(checks);
+    updateStats();
+  }
+
+  // ── セッション保存 ────────────────────────────
   function saveSession() {
     if (!currentCodes.length) return;
-    const dateStr = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'-');
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g,'-');
     const name = prompt('セッション名を入力してください', `${dateStr} 棚卸`);
     if (name === null) return;
     if (!name.trim()) { alert('セッション名を入力してください'); return; }
@@ -612,18 +803,20 @@
 
     const sessions = getSessions();
     sessions.unshift({
-      id: Date.now(),
-      name: name.trim(),
-      date: dateStr,
-      count: currentCodes.length,
-      codes: [...currentCodes],
-      checks: sessionChecks
+      id:       Date.now(),
+      name:     name.trim(),
+      date:     dateStr,
+      count:    currentCodes.length,
+      verified: Object.keys(sessionChecks).length,
+      codes:    [...currentCodes],
+      checks:   sessionChecks
     });
-    if (sessions.length > 50) sessions.splice(50); // 上限50件・古いものを自動削除
+    if (sessions.length > 50) sessions.splice(50);
     setSessions(sessions);
     alert(`「${name.trim()}」を保存しました`);
   }
 
+  // ── 履歴レンダリング ──────────────────────────
   function renderSessions() {
     const sessions = getSessions();
     const list  = document.getElementById('sessions-list');
@@ -631,27 +824,38 @@
 
     list.innerHTML = '';
     empty.style.display = sessions.length ? 'none' : 'block';
-    document.getElementById('sessions-count').textContent =
-      sessions.length ? `${sessions.length} 件 / 最大50件（超過分は自動削除）` : '';
 
     sessions.forEach(s => {
+      const total    = s.count || 0;
+      const verified = s.verified !== undefined ? s.verified : Object.keys(s.checks || {}).length;
+      const isDone   = verified >= total && total > 0;
+
       const card = document.createElement('div');
-      card.className = 'session-card';
+      card.className = 'session-card' + (isDone ? '' : ' interrupted');
+
+      const badgeCls = isDone ? 'done' : 'partial';
       card.innerHTML = `
-        <div class="session-info">
+        <div class="session-card-top">
+          <div class="session-dot ${isDone ? '' : 'interrupted'}"></div>
           <div class="session-name">${escHtml(s.name)}</div>
-          <div class="session-meta">${s.count}件 · ${s.date}</div>
+        </div>
+        <div class="session-badges">
+          <span class="badge">🖼 ${total}件の画像</span>
+          <span class="badge ${badgeCls}">検証済: ${verified}/${total}</span>
         </div>
         <div class="session-btns">
-          <button class="btn-restore-sm">復元</button>
-          <button class="btn-delete-sm">削除</button>
+          <button class="btn-outline-danger">🗑 削除</button>
+          ${isDone
+            ? `<button class="btn-outline-primary">↩ 復元</button>`
+            : `<button class="btn-solid-primary">▶ 再開</button>`}
         </div>
       `;
 
-      card.querySelector('.btn-restore-sm').addEventListener('click', () => restoreSessionById(s.id));
-      card.querySelector('.btn-delete-sm').addEventListener('click', () => deleteSessionById(s.id));
+      card.querySelector('.btn-outline-danger').addEventListener('click', () => deleteSessionById(s.id));
+      const actionBtn = card.querySelector(isDone ? '.btn-outline-primary' : '.btn-solid-primary');
+      actionBtn.addEventListener('click', () => restoreSessionById(s.id));
 
-      // 長押し・右クリックでも操作可能（サブ手段）
+      // 長押し・右クリック
       let pressTimer = null;
       card.addEventListener('touchstart', e => {
         if (e.target.closest('.session-btns')) return;
@@ -671,14 +875,11 @@
   function restoreSessionById(id) {
     const session = getSessions().find(s => s.id === id);
     if (!session) return;
-
     switchTab('search');
     document.getElementById('codes-input').value = session.codes.join('\n');
-
     const checks = getChecks();
     Object.assign(checks, session.checks);
     setChecks(checks);
-
     document.getElementById('input-panel').classList.remove('collapsed');
     showItems();
   }
@@ -691,6 +892,7 @@
     renderSessions();
   }
 
+  // ── コンテキストメニュー ──────────────────────
   let ctxTargetId = null;
 
   function showCtxMenu(x, y, sessionId) {
@@ -701,13 +903,11 @@
     menu.style.left = `${Math.min(x, window.innerWidth  - menu.offsetWidth  - 12)}px`;
     menu.style.top  = `${Math.min(y, window.innerHeight - menu.offsetHeight - 12)}px`;
   }
-
   function closeCtx() {
     document.getElementById('ctx-overlay').style.display = 'none';
     document.getElementById('ctx-menu').style.display = 'none';
     ctxTargetId = null;
   }
-
   function ctxRestore() { const id = ctxTargetId; closeCtx(); restoreSessionById(id); }
   function ctxDelete()  { const id = ctxTargetId; closeCtx(); deleteSessionById(id); }
 
@@ -715,11 +915,6 @@
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 </script>
-
-<!-- フッター（画面最下部に固定） -->
-<footer style="position:fixed; bottom:0; left:0; right:0; text-align:center; padding:8px 0 calc(8px + env(safe-area-inset-bottom)); font-size:12px; color:#bbb; background:#f0f2f5; z-index:10;">
-  © houbidou_kuwahara
-</footer>
 
 <script>
   if ('serviceWorker' in navigator) {
