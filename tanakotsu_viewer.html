@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>宝美堂_WS画像チェックツール_v1.22</title>
+  <title>宝美堂_WS画像チェックツール_v1.23</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="theme-color" content="#35B79D">
@@ -300,11 +300,17 @@
     .lb-prev:active, .lb-next:active { color: #fff; }
     .lb-prev:disabled, .lb-next:disabled { color: rgba(255,255,255,0.15); cursor: default; }
 
-    .lb-counter {
-      position: absolute; bottom: calc(20px + env(safe-area-inset-bottom));
-      left: 0; right: 0; text-align: center; font-size: 13px;
-      color: rgba(255,255,255,0.6); pointer-events: none;
+    .lb-dots {
+      position: absolute; bottom: calc(16px + env(safe-area-inset-bottom));
+      left: 0; right: 0; display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 6px; padding: 0 24px; pointer-events: none;
     }
+    .lb-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,0.3); flex-shrink: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .lb-dot.active { background: #fff; transform: scale(1.4); }
   </style>
 </head>
 <body>
@@ -402,7 +408,7 @@
     </div>
     <button class="lb-next" id="lb-next" onclick="lbNext()">›</button>
   </div>
-  <div class="lb-counter" id="lb-counter"></div>
+  <div class="lb-dots" id="lb-dots"></div>
 </div>
 
 <!-- コンテキストメニュー -->
@@ -788,14 +794,31 @@
   }
 
   function updateLbUI() {
-    document.getElementById('lb-counter').textContent =
-      lbImages.length > 1 ? `${lbIdx + 1} / ${lbImages.length}` : '';
-    document.getElementById('lb-prev').disabled = lbIdx === 0;
-    document.getElementById('lb-next').disabled = lbIdx >= lbImages.length - 1;
+    // ドットインジケーター生成
+    const dotsEl = document.getElementById('lb-dots');
+    dotsEl.innerHTML = '';
+    if (lbImages.length > 1) {
+      lbImages.forEach((_, i) => {
+        const dot = document.createElement('span');
+        dot.className = 'lb-dot' + (i === lbIdx ? ' active' : '');
+        dotsEl.appendChild(dot);
+      });
+    }
+    // 1枚のみの場合は矢印を非表示
+    const single = lbImages.length <= 1;
+    document.getElementById('lb-prev').style.visibility = single ? 'hidden' : 'visible';
+    document.getElementById('lb-next').style.visibility = single ? 'hidden' : 'visible';
   }
 
-  function lbPrev() { if (lbIdx > 0) showLbImage(lbIdx - 1); }
-  function lbNext() { if (lbIdx < lbImages.length - 1) showLbImage(lbIdx + 1); }
+  // ループあり
+  function lbPrev() {
+    if (lbImages.length <= 1) return;
+    showLbImage((lbIdx - 1 + lbImages.length) % lbImages.length);
+  }
+  function lbNext() {
+    if (lbImages.length <= 1) return;
+    showLbImage((lbIdx + 1) % lbImages.length);
+  }
 
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
