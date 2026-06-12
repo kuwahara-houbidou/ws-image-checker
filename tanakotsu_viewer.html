@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>宝美堂_WS画像チェックツール_v1.24</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" id="viewport-meta">
+  <title>宝美堂_WS画像チェックツール_v1.25</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="theme-color" content="#35B79D">
@@ -300,6 +300,11 @@
     .lb-prev:active, .lb-next:active { color: #fff; }
     .lb-prev:disabled, .lb-next:disabled { color: rgba(255,255,255,0.15); cursor: default; }
 
+    .lb-filename {
+      position: absolute; bottom: calc(44px + env(safe-area-inset-bottom));
+      left: 0; right: 0; text-align: center; font-size: 12px; font-family: monospace;
+      color: rgba(255,255,255,0.5); pointer-events: none; letter-spacing: 0.3px;
+    }
     .lb-dots {
       position: absolute; bottom: calc(16px + env(safe-area-inset-bottom));
       left: 0; right: 0; display: flex; align-items: center; justify-content: center;
@@ -331,7 +336,7 @@
 <header class="app-header">
   <h1 class="app-title">
     <img src="icon_ws-image-checker.png" alt="" class="app-logo">
-    WS画像検索ツール_v1.24
+    WS画像検索ツール_v1.25
   </h1>
 </header>
 
@@ -408,6 +413,7 @@
     </div>
     <button class="lb-next" id="lb-next" onclick="lbNext()">›</button>
   </div>
+  <div class="lb-filename" id="lb-filename"></div>
   <div class="lb-dots" id="lb-dots"></div>
 </div>
 
@@ -459,14 +465,8 @@
       if (e.key === 'Enter') checkPassword();
     });
 
-    // ライトボックス：スワイプ・背景タップ・キーボード
+    // ライトボックス：背景タップ・キーボード（スワイプなし＝ピンチズーム優先）
     const lb = document.getElementById('lightbox');
-    let lbTouchX = 0;
-    lb.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true });
-    lb.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - lbTouchX;
-      if (Math.abs(dx) > 50) { dx < 0 ? lbNext() : lbPrev(); }
-    });
     lb.addEventListener('click', e => {
       if (e.target === lb) closeLightbox();
     });
@@ -730,6 +730,8 @@
     const lb = document.getElementById('lightbox');
     lb.classList.add('open');
     document.body.style.overflow = 'hidden';
+    // ピンチズームを有効化
+    document.getElementById('viewport-meta').content = 'width=device-width, initial-scale=1.0';
 
     // ローディング表示
     document.getElementById('lb-img').style.display = 'none';
@@ -794,6 +796,9 @@
   }
 
   function updateLbUI() {
+    // ファイル名表示
+    document.getElementById('lb-filename').textContent =
+      lbImages.length && lbImages[lbIdx] ? `${lbCode}-${lbIdx + 1}.jpg` : '';
     // ドットインジケーター生成
     const dotsEl = document.getElementById('lb-dots');
     dotsEl.innerHTML = '';
@@ -823,6 +828,8 @@
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
     document.body.style.overflow = '';
+    // ピンチズームを再度無効化
+    document.getElementById('viewport-meta').content = 'width=device-width, initial-scale=1.0, user-scalable=no';
     lbCode = null;
   }
 
