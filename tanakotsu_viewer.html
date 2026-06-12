@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>宝美堂_WS画像チェックツール_v1.18</title>
+  <title>宝美堂_WS画像チェックツール_v1.19</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="theme-color" content="#35B79D">
@@ -355,7 +355,7 @@
       display: block;
       width: 100%;
       padding: 14px;
-      background: #1a2332;
+      background: #E67E22;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -364,7 +364,7 @@
       cursor: pointer;
       letter-spacing: 0.3px;
     }
-    .btn-save-fixed:active { background: #0f1620; }
+    .btn-save-fixed:active { background: #ca6f1e; }
 
     /* ── ボトムナビ（v1.15スタイル：アイコン+テキスト横並び） ── */
     .bottom-nav {
@@ -390,15 +390,15 @@
       background: transparent;
       font-size: 14px;
       font-weight: 600;
-      color: #bbb;
+      color: rgb(26,35,50);
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       transition: color 0.15s, background 0.15s;
     }
     .nav-item .nav-icon { font-size: 18px; line-height: 1; }
     .nav-item.active {
-      color: #35B79D;
-      background: #edf9f7;
+      color: #fff;
+      background: rgb(26,35,50);
     }
 
     /* ── 履歴タブ ── */
@@ -561,7 +561,7 @@
 
 <!-- アプリヘッダー -->
 <header class="app-header">
-  <h1 class="app-title">WS画像検索ツール_v1.18</h1>
+  <h1 class="app-title">WS画像検索ツール_v1.19</h1>
 </header>
 
 <!-- ══ 検索タブ ══ -->
@@ -581,7 +581,7 @@
       </span>
     </div>
     <div class="panel-body">
-      <p class="panel-hint">12桁の管理番号を改行区切りで入力してください。<br>※改行・カンマ・スペース区切り対応<br>※画像はWSから取得しています</p>
+      <p class="panel-hint">※改行・カンマ・スペース区切り対応<br>※画像はWSから取得しています</p>
       <textarea id="codes-input" placeholder="ここに12桁の管理番号を入力"></textarea>
       <div class="btn-row">
         <button class="btn-clear" onclick="clearInput()">クリア</button>
