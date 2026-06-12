@@ -735,9 +735,9 @@
     document.getElementById('lb-img').style.display = 'none';
     document.getElementById('lb-noimage').style.display = 'none';
     document.getElementById('lb-loading').style.display = 'block';
-    document.getElementById('lb-counter').textContent = '';
-    document.getElementById('lb-prev').disabled = true;
-    document.getElementById('lb-next').disabled = true;
+    document.getElementById('lb-dots').innerHTML = '';
+    document.getElementById('lb-prev').style.visibility = 'hidden';
+    document.getElementById('lb-next').style.visibility = 'hidden';
 
     // 1枚目を読み込み
     const url1 = imgUrl(code, 1);
