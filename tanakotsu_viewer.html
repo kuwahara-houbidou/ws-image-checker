@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>宝美堂_WS画像チェックツール_v1.19</title>
+  <title>宝美堂_WS画像チェックツール_v1.20</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="theme-color" content="#35B79D">
@@ -12,13 +12,17 @@
   <meta name="apple-mobile-web-app-title" content="WS画像チェック">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <style>
+    :root {
+      --footer-h: 30px;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
       background: #f0f2f5;
-      padding: 0 12px 12px;
-      padding-bottom: calc(76px + env(safe-area-inset-bottom));
+      padding: 0 12px;
+      /* 保存バー(約58px) + コピーライト(30px) + safe-area + 余白 */
+      padding-bottom: calc(100px + env(safe-area-inset-bottom));
       min-height: 100vh;
     }
 
@@ -76,16 +80,48 @@
     .app-header {
       display: flex;
       align-items: center;
-      height: 50px;
+      height: 48px;
       background: #f0f2f5;
       position: sticky;
       top: 0;
-      z-index: 40;
+      z-index: 51;
     }
     h1.app-title {
       font-size: 16px;
       font-weight: 700;
       color: #1a1a1a;
+    }
+
+    /* ── タブバー（上部固定） ── */
+    .tabbar {
+      position: sticky;
+      top: 48px;
+      z-index: 50;
+      display: flex;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin: 0 -12px 14px;
+    }
+    .tab {
+      flex: 1;
+      padding: 13px 0;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgb(26,35,50);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.15s, background 0.15s;
+    }
+    .tab-icon { font-size: 17px; line-height: 1; }
+    .tab.active {
+      color: #fff;
+      background: rgb(26,35,50);
     }
 
     /* ── タブペイン ── */
@@ -115,7 +151,6 @@
     .panel-title { font-size: 15px; font-weight: 700; color: #222; }
     .panel-status { font-size: 12px; color: #35B79D; font-weight: 600; margin-left: 2px; }
 
-    /* SVGアイコン矢印：collapsed で 180度回転 */
     .toggle-icon {
       width: 24px;
       height: 24px;
@@ -130,7 +165,7 @@
     .panel-body {
       padding: 0 16px 16px;
       overflow: hidden;
-      max-height: 600px;
+      max-height: 700px;
       opacity: 1;
       transition: max-height 0.3s ease, opacity 0.25s ease, padding-bottom 0.3s ease;
     }
@@ -149,7 +184,7 @@
 
     textarea {
       width: 100%;
-      height: 200px;
+      height: 240px;
       border: 1.5px solid #e0e0e0;
       border-radius: 6px;
       padding: 10px 12px;
@@ -225,7 +260,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
     }
 
     /* ── カード ── */
@@ -245,7 +280,6 @@
       overflow: hidden;
       transition: opacity .2s;
     }
-    /* 確認済みは画像エリアのみ半透明 */
     .card.checked .card-img-wrap { opacity: 0.6; }
 
     .card-img-wrap img {
@@ -256,7 +290,7 @@
       object-fit: contain;
     }
 
-    /* 確認済みオーバーレイ：画像の上のみ、card-numより手前 */
+    /* 確認済みオーバーレイ */
     .check-overlay {
       display: none;
       position: absolute;
@@ -305,7 +339,7 @@
       z-index: 3;
     }
 
-    /* カード下部（opacity の影響を受けない） */
+    /* カード下部 */
     .card-footer {
       display: flex;
       align-items: center;
@@ -338,11 +372,11 @@
       accent-color: #35B79D;
     }
 
-    /* ── 保存バー（固定） ── */
+    /* ── 保存バー（フッターの上に固定追従） ── */
     .save-bar {
       display: none;
       position: fixed;
-      bottom: calc(56px + env(safe-area-inset-bottom));
+      bottom: calc(var(--footer-h) + env(safe-area-inset-bottom));
       left: 0;
       right: 0;
       padding: 8px 12px;
@@ -366,39 +400,21 @@
     }
     .btn-save-fixed:active { background: #ca6f1e; }
 
-    /* ── ボトムナビ（v1.15スタイル：アイコン+テキスト横並び） ── */
-    .bottom-nav {
+    /* ── コピーライト（最下部固定） ── */
+    #app-footer {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: calc(56px + env(safe-area-inset-bottom));
+      height: calc(var(--footer-h) + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
-      background: #fff;
-      border-top: 1px solid #e8eaed;
       display: flex;
-      z-index: 50;
-    }
-    .nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      border: none;
-      background: transparent;
-      font-size: 14px;
-      font-weight: 600;
-      color: rgb(26,35,50);
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: color 0.15s, background 0.15s;
-    }
-    .nav-item .nav-icon { font-size: 18px; line-height: 1; }
-    .nav-item.active {
-      color: #fff;
-      background: rgb(26,35,50);
+      font-size: 11px;
+      color: #bbb;
+      background: #f0f2f5;
+      z-index: 44;
     }
 
     /* ── 履歴タブ ── */
@@ -561,8 +577,18 @@
 
 <!-- アプリヘッダー -->
 <header class="app-header">
-  <h1 class="app-title">WS画像検索ツール_v1.19</h1>
+  <h1 class="app-title">WS画像検索ツール_v1.20</h1>
 </header>
+
+<!-- タブバー（上部） -->
+<div class="tabbar">
+  <button class="tab active" id="tab-search" onclick="switchTab('search')">
+    <span class="tab-icon">🔍</span>画像検索
+  </button>
+  <button class="tab" id="tab-sessions" onclick="switchTab('sessions')">
+    <span class="tab-icon">📁</span>履歴（セッション）
+  </button>
+</div>
 
 <!-- ══ 検索タブ ══ -->
 <div class="tabpane active" id="pane-search">
@@ -607,22 +633,13 @@
   <div id="sessions-list"></div>
 </div>
 
-<!-- 保存バー（固定） -->
+<!-- 保存バー（コピーライトの上に追従） -->
 <div class="save-bar" id="save-bar">
   <button class="btn-save-fixed" onclick="saveSession()">💾 このセッションを保存</button>
 </div>
 
-<!-- ボトムナビ（アイコン+テキスト横並び） -->
-<nav class="bottom-nav">
-  <button class="nav-item active" id="nav-search" onclick="switchTab('search')">
-    <span class="nav-icon">🔍</span>
-    <span>画像検索</span>
-  </button>
-  <button class="nav-item" id="nav-sessions" onclick="switchTab('sessions')">
-    <span class="nav-icon">📁</span>
-    <span>履歴（セッション）</span>
-  </button>
-</nav>
+<!-- コピーライト（最下部固定） -->
+<footer id="app-footer">© houbidou_kuwahara</footer>
 
 <!-- コンテキストメニュー（長押し・右クリック） -->
 <div class="ctx-overlay" id="ctx-overlay" onclick="closeCtx()"></div>
@@ -675,9 +692,9 @@
   // ── タブ切り替え ──────────────────────────────
   function switchTab(name) {
     document.querySelectorAll('.tabpane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
-    document.getElementById('pane-'  + name).classList.add('active');
-    document.getElementById('nav-'   + name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('pane-' + name).classList.add('active');
+    document.getElementById('tab-'  + name).classList.add('active');
     if (name === 'sessions') renderSessions();
   }
 
