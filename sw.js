@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ws-checker-v1.26';
+const CACHE_NAME = 'ws-checker-v1.27';
 const ASSETS = [
   './tanakotsu_viewer.html',
   './manifest.json',

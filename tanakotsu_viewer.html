@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" id="viewport-meta">
-  <title>宝美堂_WS画像チェックツール_v1.26</title>
+  <title>宝美堂_WS画像チェックツール_v1.27</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="theme-color" content="#35B79D">
@@ -276,12 +276,13 @@
     }
     .lb-close:active { background: rgba(255,255,255,0.35); }
 
-    .lb-inner { display: flex; align-items: center; width: 100%; padding: 0; }
+    .lb-inner { display: flex; align-items: center; width: 100%; padding: 0; position: relative; }
 
     .lb-img-wrap {
-      flex: 1; display: flex; align-items: center; justify-content: center; height: 76vh;
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      height: calc(100dvh - 130px);
     }
-    .lb-img-wrap img { max-width: 100%; max-height: 76vh; object-fit: contain; display: block; }
+    .lb-img-wrap img { max-width: 100%; max-height: calc(100dvh - 130px); object-fit: contain; display: block; }
     .lb-noimage { display: none; color: #888; font-size: 14px; }
 
     .lb-loading {
@@ -292,13 +293,17 @@
     @keyframes lb-spin { to { transform: rotate(360deg); } }
 
     .lb-prev, .lb-next {
-      font-size: 44px; color: rgba(255,255,255,0.55); background: transparent;
-      border: none; padding: 12px 10px; cursor: pointer; flex-shrink: 0;
-      line-height: 1; -webkit-tap-highlight-color: transparent;
+      position: absolute; width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,0.18); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; z-index: 2;
+      -webkit-tap-highlight-color: transparent;
       user-select: none; -webkit-user-select: none;
     }
-    .lb-prev:active, .lb-next:active { color: #fff; }
-    .lb-prev:disabled, .lb-next:disabled { color: rgba(255,255,255,0.15); cursor: default; }
+    .lb-prev { left: 16px; }
+    .lb-next { right: 16px; }
+    .lb-prev:active, .lb-next:active { background: rgba(255,255,255,0.38); }
+    .lb-prev:disabled, .lb-next:disabled { opacity: 0.15; cursor: default; }
 
     .lb-filename {
       position: absolute; bottom: calc(44px + env(safe-area-inset-bottom));
@@ -336,7 +341,7 @@
 <header class="app-header">
   <h1 class="app-title">
     <img src="icon_ws-image-checker.png" alt="" class="app-logo">
-    WS画像検索ツール_v1.26
+    WS画像検索ツール_v1.27
   </h1>
 </header>
 
@@ -405,13 +410,17 @@
 <div class="lb-overlay" id="lightbox">
   <button class="lb-close" onclick="closeLightbox()">✕</button>
   <div class="lb-inner">
-    <button class="lb-prev" id="lb-prev" onclick="lbPrev()">‹</button>
+    <button class="lb-prev" id="lb-prev" onclick="lbPrev()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
     <div class="lb-img-wrap">
       <img id="lb-img" src="" alt="">
       <div class="lb-loading" id="lb-loading"></div>
       <div class="lb-noimage" id="lb-noimage">No Image</div>
     </div>
-    <button class="lb-next" id="lb-next" onclick="lbNext()">›</button>
+    <button class="lb-next" id="lb-next" onclick="lbNext()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
   <div class="lb-filename" id="lb-filename"></div>
   <div class="lb-dots" id="lb-dots"></div>
